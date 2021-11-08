@@ -3,7 +3,7 @@ from ..models import User;
 
 import bcrypt;
 
-class RegisterSerializer(serializers.ModelSerializer) :
+class ModifySerializer(serializers.ModelSerializer) :
     class Meta :
         model = User;
         fields = ('email',
@@ -16,15 +16,10 @@ class RegisterSerializer(serializers.ModelSerializer) :
                   'created_at',
                   'user_id');
     
-    def create(self, validated_data) :
-        instance = self.Meta.model(**validated_data);
-
-        # set password encrypted
-        password = validated_data.pop('password', None);
+    def update(self, instance, validated_data) :
+        instance.password = bcrypt.hashpw(validated_data.get('password', instance.password).encode('utf-8'), bcrypt.gensalt());
+        instance.nickname = validated_data.get('nickname', instance.nickname);
         
-        if password is not None :
-            instance.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt());
-
         instance.save();
 
         return instance;

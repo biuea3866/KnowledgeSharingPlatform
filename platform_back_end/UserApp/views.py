@@ -1,15 +1,18 @@
+from functools import partial
 from rest_framework.views import APIView;
 from rest_framework.parsers import JSONParser;
 from django.http.response import JsonResponse, HttpResponse;
 
 from rest_framework.exceptions import AuthenticationFailed;
-import jwt, datetime;
+
+import jwt, datetime, bcrypt;
 
 from .models import User;
 from .serializers.register_serializer import RegisterSerializer;
 from .serializers.login_serializer import LoginSerializer;
 from .serializers.users_serializer import UsersSerializer;
 from .serializers.user_serializer import UserSerializer;
+from .serializers.modify_serializer import ModifySerializer;
 
 class RegisterView(APIView) :
     def post(self, request) :
@@ -18,10 +21,10 @@ class RegisterView(APIView) :
             user_serializer = RegisterSerializer(data=vo);
 
             if user_serializer.is_valid(raise_exception=True) :
-                entity = user_serializer.save();
+                user_serializer.save();
 
                 return JsonResponse({
-                    'payload': entity,
+                    'payload': user_serializer.data,
                     'message': 'Successfully register'
                 });
 
@@ -29,6 +32,7 @@ class RegisterView(APIView) :
                 'payload': None,
                 'message': 'Failed to register'
             });
+
         except Exception as e:
             return JsonResponse({
                 'payload': None,
@@ -50,7 +54,7 @@ class LoginView(APIView) :
                 if user is None :
                     raise AuthenticationFailed('User not found!');
 
-                if not user.check_password(password) :
+                if bcrypt.checkpw(user.password.encode('utf-8'), bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())) is None :
                     raise AuthenticationFailed('Incorrect password');
 
                 payload = {
@@ -98,7 +102,7 @@ class UserView(APIView) :
                     'payload': None,
                     'message': "Failed to get user information"
                 });
-                
+
             return JsonResponse({
                 'payload': user_serializer.data,
                 'message': "Successfully get user information"
@@ -127,6 +131,27 @@ class UsersView(APIView) :
 
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Unauthenticated!');
+
+class ModifyView(APIView) :
+    def put(self, request) :
+        vo = JSONParser().parse(request);
+        user = User.objects.get(user_id=vo['user_id']);
+        user_serializer = ModifySerializer(user, 
+                                           data=vo,
+                                           partial=True);
+
+        if user_serializer.is_valid(raise_exception=True) :
+            user_serializer.save();
+
+            return JsonResponse({
+                'payload': user_serializer.data,
+                'message': "Successfully update data"
+            });
+
+        return JsonResponse({
+            'payload': None,
+            'messsage': "Failed to update data"
+        });
 
 class LogoutView(APIView) :
     def post(self, request) :
