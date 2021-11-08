@@ -1,10 +1,24 @@
 from django.db import models
+from django.contrib.auth.models import AbstractUser;
 
-class User(models.Model) :
-    email = models.CharField(max_length=500, unique=True);
-    encryptedPassword = models.CharField(max_length=500);
-    name = models.CharField(max_length=500);
-    department = models.CharField(max_length=500);
-    role = models.CharField(max_length=500);
+class User(AbstractUser) :
+    email = models.CharField(max_length=255, 
+                             unique=True);
 
-    userId = models.AutoField(primary_key=True);
+    password = models.CharField(max_length=255);
+
+    name = models.CharField(max_length=255);
+
+    department = models.CharField(max_length=255);
+
+    role = models.CharField(max_length=255);
+
+    is_superuser = models.BooleanField(default=False);
+
+    created_at = models.DateField(auto_now_add=True);
+
+    user_id = models.CharField(primary_key=True,
+                               max_length=150);
+
+    REQUIRED_FIELDS = [];
+    USERNAME_FIELD = 'email';
