@@ -10,6 +10,6 @@ class UserSerializer(serializers.ModelSerializer) :
                   'name',
                   'department',
                   'role',
-                  'is_superuser',
+                  'is_active',
                   'created_at',
                   'user_id');

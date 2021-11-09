@@ -12,14 +12,17 @@ class ModifySerializer(serializers.ModelSerializer) :
                   'name',
                   'department',
                   'role',
-                  'is_superuser',
+                  'is_active',
                   'created_at',
                   'user_id');
     
     def update(self, instance, validated_data) :
-        instance.password = bcrypt.hashpw(validated_data.get('password', instance.password).encode('utf-8'), bcrypt.gensalt());
-        instance.nickname = validated_data.get('nickname', instance.nickname);
-        
+        if(validated_data['password'] is not None) :
+            instance.password = bcrypt.hashpw(validated_data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8');
+            
+        if(validated_data['nickname'] is not None) :
+            instance.nickname = validated_data.get('nickname', instance.nickname);
+            
         instance.save();
 
         return instance;

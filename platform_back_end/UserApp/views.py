@@ -1,11 +1,10 @@
-from functools import partial
 from rest_framework.views import APIView;
 from rest_framework.parsers import JSONParser;
 from django.http.response import JsonResponse, HttpResponse;
 
 from rest_framework.exceptions import AuthenticationFailed;
 
-import jwt, datetime, bcrypt;
+import jwt, datetime, bcrypt
 
 from .models import User;
 from .serializers.register_serializer import RegisterSerializer;
@@ -13,13 +12,19 @@ from .serializers.login_serializer import LoginSerializer;
 from .serializers.users_serializer import UsersSerializer;
 from .serializers.user_serializer import UserSerializer;
 from .serializers.modify_serializer import ModifySerializer;
+from .serializers.delete_serializer import DeleteSerializer;
 
 class RegisterView(APIView) :
     def post(self, request) :
+        token = request.COOKIES.get('token');
+
+        if not token :
+            raise AuthenticationFailed('Unauthenticated');
+
         try :
             vo = JSONParser().parse(request);
             user_serializer = RegisterSerializer(data=vo);
-
+            
             if user_serializer.is_valid(raise_exception=True) :
                 user_serializer.save();
 
@@ -54,7 +59,7 @@ class LoginView(APIView) :
                 if user is None :
                     raise AuthenticationFailed('User not found!');
 
-                if bcrypt.checkpw(user.password.encode('utf-8'), bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())) is None :
+                if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) is False :
                     raise AuthenticationFailed('Incorrect password');
 
                 payload = {
@@ -63,10 +68,14 @@ class LoginView(APIView) :
                     'iat': datetime.datetime.utcnow()
                 };
 
-                token = jwt.encode(payload, 'secret', algorithm='HS256');
+                token = jwt.encode(payload, 
+                                   'secret', 
+                                   algorithm='HS256');
                 response = HttpResponse();
 
-                response.set_cookie(key='token', value=token, httponly=True);
+                response.set_cookie(key='token', 
+                                    value=token, 
+                                    httponly=True);
                 response.data = {
                     "payload": None,
                     "message": "Successfully login"
@@ -93,15 +102,18 @@ class UserView(APIView) :
             raise AuthenticationFailed('Unauthenticated!');
 
         try :
-            payload = jwt.decode(token, 'secret', algorithms='HS256');
+            payload = jwt.decode(token, 
+                                 'secret', 
+                                 algorithms='HS256');
             user = User.objects.get(user_id=payload['user_id']);
-            user_serializer = UserSerializer(user);
 
             if not user :
                 return JsonResponse({
                     'payload': None,
-                    'message': "Failed to get user information"
+                    'message': "User not found"
                 });
+
+            user_serializer = UserSerializer(user);
 
             return JsonResponse({
                 'payload': user_serializer.data,
@@ -119,10 +131,20 @@ class UsersView(APIView) :
             raise AuthenticationFailed('Unauthenticated!');
 
         try :
-            jwt.decode(token, 'secret', algorithms='HS256');
+            jwt.decode(token, 
+                       'secret', 
+                       algorithms='HS256');
 
-            user = User.objects.all();
-            user_serializer = UsersSerializer(user, many=True);
+            users = User.objects.all().filter(is_active=True);
+
+            if not users :
+                return JsonResponse({
+                    'payload': None,
+                    'message': "Users not found"
+                });
+
+            user_serializer = UsersSerializer(users, 
+                                              many=True);
 
             return JsonResponse({
                 'payload': user_serializer.data,
@@ -134,24 +156,40 @@ class UsersView(APIView) :
 
 class ModifyView(APIView) :
     def put(self, request) :
-        vo = JSONParser().parse(request);
-        user = User.objects.get(user_id=vo['user_id']);
-        user_serializer = ModifySerializer(user, 
-                                           data=vo,
-                                           partial=True);
+        token = request.COOKIES.get('token');
 
-        if user_serializer.is_valid(raise_exception=True) :
-            user_serializer.save();
+        if not token :
+            raise AuthenticationFailed('Unauthenticated!');
+
+        try :
+            vo = JSONParser().parse(request);
+            user = User.objects.get(user_id=vo['user_id']);
+
+            if not user :
+                raise AuthenticationFailed('User not found');
+
+            user_serializer = ModifySerializer(user, 
+                                               data=vo,
+                                               partial=True);
+
+            if user_serializer.is_valid(raise_exception=True) :
+                user_serializer.save();
+
+                return JsonResponse({
+                    'payload': user_serializer.data,
+                    'message': "Successfully update data"
+                });
 
             return JsonResponse({
-                'payload': user_serializer.data,
-                'message': "Successfully update data"
+                'payload': None,
+                'message': "Failed to update user"
             });
-
-        return JsonResponse({
-            'payload': None,
-            'messsage': "Failed to update data"
-        });
+        
+        except Exception as e:
+            return JsonResponse({
+                'payload': None,
+                'message': "Error message: " +  str(e)
+            });
 
 class LogoutView(APIView) :
     def post(self, request) :
@@ -164,3 +202,39 @@ class LogoutView(APIView) :
         };
 
         return response;
+
+class DeleteView(APIView) :
+    def put(self, request) :
+        token = request.COOKIES.get('token');
+
+        if not token :
+            raise AuthenticationFailed('Unauthenticated');
+
+        try :
+            vo = JSONParser().parse(request);
+            user = User.objects.get(user_id=vo['user_id']);
+
+            if not user :
+                raise AuthenticationFailed('User not found');
+
+            user_serializer = DeleteSerializer(user, 
+                                               data=vo,
+                                               partial=True);
+
+            if(user_serializer.is_valid(raise_exception=True)) :
+                user_serializer.save();
+
+                return JsonResponse({
+                    'payload': user_serializer.data,
+                    'message': "Successfully delete user"
+                });
+
+            return JsonResponse({
+                'payload': None,
+                'message': "Falied to delete user"
+            });
+        except Exception as e:
+            return JsonResponse({
+                'payload': None,
+                'message': "Error message: " + str(e)
+            });
