@@ -8,14 +8,7 @@ class DeleteSerializer(serializers.Serializer) :
     
     class Meta :
         model = User;
-        fields = ('email',
-                  'password',
-                  'nickname',
-                  'name',
-                  'department',
-                  'role',
-                  'is_active',
-                  'created_at',
+        fields = ('is_active',
                   'user_id');
 
     def update(self, instance, validated_data) :

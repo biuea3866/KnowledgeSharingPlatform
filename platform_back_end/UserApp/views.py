@@ -2,7 +2,7 @@ from rest_framework.views import APIView;
 from rest_framework.parsers import JSONParser;
 from django.http.response import JsonResponse, HttpResponse;
 
-from rest_framework.exceptions import AuthenticationFailed;
+from rest_framework.exceptions import AuthenticationFailed, ValidationError;
 
 import jwt, datetime, bcrypt
 
@@ -16,11 +16,6 @@ from .serializers.delete_serializer import DeleteSerializer;
 
 class RegisterView(APIView) :
     def post(self, request) :
-        token = request.COOKIES.get('token');
-
-        if not token :
-            raise AuthenticationFailed('Unauthenticated');
-
         try :
             vo = JSONParser().parse(request);
             user_serializer = RegisterSerializer(data=vo);
@@ -38,7 +33,7 @@ class RegisterView(APIView) :
                 'message': 'Failed to register'
             });
 
-        except Exception as e:
+        except ValidationError as e:
             return JsonResponse({
                 'payload': None,
                 'message': 'Error: ' + str(e)

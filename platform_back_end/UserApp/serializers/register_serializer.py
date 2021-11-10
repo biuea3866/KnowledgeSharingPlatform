@@ -3,6 +3,7 @@ from rest_framework import serializers;
 from ..models import User;
 
 import bcrypt;
+import uuid;
 
 class RegisterSerializer(serializers.ModelSerializer) :
     class Meta :
@@ -28,8 +29,10 @@ class RegisterSerializer(serializers.ModelSerializer) :
 
         # set created_at
         instance.created_at = datetime.date.today();
-        print(instance.is_active);
 
+        # set user_id
+        instance.user_id = uuid.uuid4();
+        
         instance.save();
         
         return instance;
