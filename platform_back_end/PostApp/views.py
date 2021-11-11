@@ -92,7 +92,10 @@ class DetailView(APIView) :
             post = Post.objects.get(post_id=post_id);
             
             if not post :
-                raise ValidationError('Post not found');
+                return JsonResponse({
+                    'payload': None,
+                    'message': "Post not found"
+                });
 
             post_serializer = DetailSerializer(post);
 
@@ -122,12 +125,17 @@ class CommentView(APIView) :
                 comment_serializer.save();
 
                 post = Post.objects.get(post_id=post_id);
+
+                if not post :
+                    return JsonResponse({
+                        'payload': None,
+                        'message': "Post not found"
+                    });
+
                 updated_post = DetailSerializer(post).data;
                 comments = Comment.objects.all().filter(post_id=post_id);
-                
                 updated_post['comments'] = CommentsSerializer(comments, 
                                                               many=True).data;
-
                 post_serializer = ModifySerializer(post,
                                                    data=updated_post,
                                                    partial=True);
@@ -171,6 +179,13 @@ class TagView(APIView) :
                 tag_serializer.save();
 
                 post = Post.objects.get(post_id=post_id);
+
+                if not post :
+                    return JsonResponse({
+                        'payload': None,
+                        'message': "Post not found"
+                    });
+
                 updated_post = DetailSerializer(post).data;
                 tags = Tag.objects.all().filter(post_id=post_id)
 
@@ -210,4 +225,40 @@ class ModifyView(APIView) :
 
         if not token :
             raise AuthenticationFailed('Unauthenticated');
+
+        try :
+            vo = JSONParser().parse(request);
+            post = Post.objects.get(post_id=post_id);
+
+            if not post :
+                return JsonResponse({
+                    'payload': None,
+                    'message': 'Post not found'
+                });
+
+            updated_post = DetailSerializer(post).data;
             
+            updated_post['contents'] = vo['contents'];
+
+            post_serializer = ModifySerializer(post,
+                                               data=updated_post,
+                                               partial=True);
+
+            if post_serializer.is_valid() :
+                post_serializer.save();
+
+                return JsonResponse({
+                    'payload': post_serializer.data,
+                    'message': "Successfully modify post"
+                });
+
+            return JsonResponse({
+                'payload': None,
+                'message': "Failed to modify post"
+            });
+
+        except Exception as e :
+            return JsonResponse({
+                'payload': None,
+                'message': 'Error: ' + str(e)
+            });

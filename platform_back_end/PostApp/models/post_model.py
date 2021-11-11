@@ -1,3 +1,4 @@
+from django.utils import timezone;
 from django.db import models
 
 class Post(models.Model) :
@@ -12,7 +13,7 @@ class Post(models.Model) :
 
     created_at = models.DateTimeField(auto_now_add=True);
 
-    updated_at = models.DateTimeField(auto_now=True);
+    updated_at = models.DateTimeField(default=timezone.now());
 
     update_count = models.IntegerField(default=0);
 

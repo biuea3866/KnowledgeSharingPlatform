@@ -13,4 +13,8 @@ class CommentSerializer(serializers.ModelSerializer) :
                   'post_id');
 
     def create(self, validated_data) :
-        return Comment.objects.create(**validated_data);
+        instance = self.Meta.model(**validated_data);
+
+        instance.save();
+
+        return instance;
