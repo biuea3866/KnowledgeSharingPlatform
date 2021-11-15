@@ -2,23 +2,24 @@ version: '3'
 services:
   nginx:
     container_name: nginx
-    build: ./nginx
-    image: ks-platform/nginx
+    nginx:latest
     restart: always
     ports:
       - "80:80"
     volumes:
-      - ./platform_back_end:/srv/KnowledgeSharingPlatform
-      - ./log:/var/log/nginx
+      - ./platform_back_end:/platform_back_end
+      - ./config/nginx/nginx.conf:/etc/nginx/conf.d/default.conf
     depends_on:
-      - django
+      - web
 
-  django:
+  web:
     container_name: django
-    build: ./platform_back_end
-    image: ks-platform/django
+    build: .
     restart: always
-    command: uwsgi --ini uwsgi.ini
+    command: bash -c "
+      python3 manage.py collectstatic --no-input &&
+      python3 manage.py makemigrations &&
+      python3 manage.py migrate &&
+      gunicorn platform_back_end.wsgi:application -b 0:80"
     volumes:
-      - ./platform_back_end:/srv/KnowledgeSharingPlatform
-      - ./log:/var/log/uwsgi
+      - ./platform_back_end:/platform_back_end
