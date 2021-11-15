@@ -84,7 +84,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'djongo',
         'CLIENT': {
-            "host": "mongodb+srv://root:1234@cluster0.llvxg.mongodb.net/myFristDatabase?retryWrites=true&w=majority",
+            "host": "mongodb+srv://root:1234@cluster0.llvxg.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
             "name": "KnowledgeSharingPlatform",
             "authMechanism": "SCRAM-SHA-1"
         }
