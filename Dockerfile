@@ -17,9 +17,9 @@ RUN pip3 install --upgrade setuptools
 
 RUN mkdir /config
 
-ADD /confing/requirements.txt /config/
+ADD /config/requirements.txt /config/
 
-RUN pipe install -r /config/requirements.txt
+RUN pip3 install -r /config/requirements.txt
 
 RUN mkdir /platform_back_end
 

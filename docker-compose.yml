@@ -2,7 +2,7 @@ version: '3'
 services:
   nginx:
     container_name: nginx
-    nginx:latest
+    image: nginx:latest
     restart: always
     ports:
       - "80:80"
