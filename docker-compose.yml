@@ -2,7 +2,7 @@ version: '3'
 services:
   nginx:
     container_name: nginx
-    build: .nginx
+    build: ./nginx
     image: ks-platform/nginx
     restart: always
     ports:
