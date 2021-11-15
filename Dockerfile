@@ -12,7 +12,7 @@ ENV PYTHONUNBUFFERED=0
 
 ENV PYTHONIOENCODING=utf-8
 
-RUN pip3 install --upgrade pip
+RUN pip3 install --upgrade pip3
 RUN pip3 install --upgrade setuptools
 
 RUN mkdir /config
