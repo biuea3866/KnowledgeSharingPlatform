@@ -22,6 +22,18 @@ export default function createRequestSaga(type, request) {
             
             console.log(response);
 
+            if(response.data.message.includes('Error')) {
+                yield put({
+                    type: FAILURE,
+                    payload: response.data.message,
+                    error: true
+                });
+
+                yield put(finishLoading(type));
+                
+                return;
+            }
+
             yield put({
                 type: SUCCESS,
                 payload: response.data.payload,

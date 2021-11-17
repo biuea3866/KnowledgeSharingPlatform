@@ -7,3 +7,4 @@ uwsgi
 djangorestframework
 django_cors_headers
 gunicorn
+PyJWT

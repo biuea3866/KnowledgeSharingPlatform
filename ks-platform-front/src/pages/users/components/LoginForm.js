@@ -45,13 +45,13 @@ const LoginForm = () => {
         }));
     };
     const onSubmit = e => {
+        e.preventDefault();
+        
         const { 
             email,
             password
         } = form;
 
-        console.log(email);
-        
         if([email].includes('')) {
             setError('Email을 입력해주세요');
             
@@ -70,15 +70,11 @@ const LoginForm = () => {
         }));
     };
 
-    // useEffect(() => {
-    //     dispatch(initializeForm('login'));
-    // }, [dispatch]);
-
     useEffect(() => {
         if(authError) {
             setError(authError);
 
-            // return
+            return
         };
 
         // if(auth) {
@@ -88,7 +84,7 @@ const LoginForm = () => {
 
     return(
         <FormBlock>
-            <div>
+            <form onSubmit={ onSubmit }>
                 <Input autoComplete="email"
                        name="email"
                        placeholder="E-mail"
@@ -103,12 +99,10 @@ const LoginForm = () => {
                        value={ form.password }
                 />
                 { error && <ErrorMessage>{ error }</ErrorMessage>}
-                <FullButton red
-                            onClick={ onSubmit }
-                >
+                <FullButton red>
                     Login
                 </FullButton>
-            </div>
+            </form>
         </FormBlock>
     );
 };
