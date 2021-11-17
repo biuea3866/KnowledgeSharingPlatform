@@ -20,7 +20,7 @@ from .serializers.tags_serializer import TagsSerializer;
 
 class WriteView(APIView) :
     def post(self, request) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated');
@@ -50,7 +50,7 @@ class WriteView(APIView) :
             
 class SearchView(APIView) :
     def get(self, request, keyword) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthentication');
@@ -83,7 +83,7 @@ class SearchView(APIView) :
 
 class DetailView(APIView) :
     def get(self, request, post_id) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthentication');
@@ -112,7 +112,7 @@ class DetailView(APIView) :
 
 class CommentView(APIView) :
     def put(self, request, post_id) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthentication');
@@ -166,7 +166,7 @@ class CommentView(APIView) :
 
 class TagView(APIView) :
     def put(self, request, post_id) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated');
@@ -221,7 +221,7 @@ class TagView(APIView) :
 
 class ModifyView(APIView) :
     def put(self, request, post_id) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated');

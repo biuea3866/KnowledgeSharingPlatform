@@ -85,8 +85,6 @@ class LoginView(APIView) :
 
 class UserView(APIView) :
     def get(self, request) :
-        print(request);
-        
         token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
@@ -113,7 +111,7 @@ class UserView(APIView) :
 
 class UsersView(APIView) :
     def get(self, request) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated!');
@@ -141,7 +139,7 @@ class UsersView(APIView) :
 
 class ModifyView(APIView) :
     def put(self, request) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated!');
@@ -189,7 +187,7 @@ class LogoutView(APIView) :
 
 class DeleteView(APIView) :
     def put(self, request) :
-        token = request.COOKIES.get('token');
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated');

@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import { changeField, initializeForm, login } from '../../../modules/auth';
 import { saveUser } from '../../../modules/user';
+import { withRouter } from 'react-router-dom';
 import FullButton from '../../components/common/FullButton';
 import Input from '../../components/common/Input';
-import { Cookies } from 'react-cookie';
 
 const FormBlock = styled.div`
     display: flex;
@@ -22,7 +22,7 @@ const ErrorMessage = styled.div`
     margin-top: 1rem;
 `;
 
-const LoginForm = () => {
+const LoginForm = ({ history }) => {
     const [error, setError] = useState('');
     const dispatch = useDispatch();
     const { 
@@ -90,6 +90,12 @@ const LoginForm = () => {
         }
     }, [dispatch, auth, authError]);
 
+    useEffect(() => {
+        if(user) {
+            history.push('/na-docs');
+        }
+    }, [user]);
+
     return(
         <FormBlock>
             <form onSubmit={ onSubmit }>
@@ -115,4 +121,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default withRouter(LoginForm);
