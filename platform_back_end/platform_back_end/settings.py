@@ -27,6 +27,7 @@ DEBUG = False;
 
 ALLOWED_HOSTS = ['http://ec2-18-177-184-216.ap-northeast-1.compute.amazonaws.com/', '18.177.184.216']
 
+CORS_ALLOW_CREDENTIALS = True;
 
 # Application definition
 

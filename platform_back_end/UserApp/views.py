@@ -75,7 +75,7 @@ class LoginView(APIView) :
                 response.set_cookie(key='token', 
                                     value=token, 
                                     httponly=True);
-
+                
                 return response;
             
             return JsonResponse({
