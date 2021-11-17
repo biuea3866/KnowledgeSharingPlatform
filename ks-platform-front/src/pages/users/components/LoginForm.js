@@ -28,10 +28,15 @@ const LoginForm = ({ history }) => {
     const dispatch = useDispatch();
     const { 
         form,
+        user,
         auth,
         authError
-    } = useSelector(({ auth }) => ({ 
+    } = useSelector(({ 
+        auth,
+        user
+    }) => ({ 
         form: auth.login,
+        user: user.user,
         auth: auth.auth,
         authError: auth.authError
     }));
@@ -86,13 +91,19 @@ const LoginForm = ({ history }) => {
             localStorage.setItem('token', JSON.stringify(token));
 
             dispatch(saveUser());
-
-            dispatch(initializeForm('auth'));
         }
     }, [dispatch, auth, authError]);
 
     useEffect(() => {
         if(user) {
+            setError(null);
+
+            localStorage.setItem('user', JSON.stringify(user));
+
+            dispatch(initializeForm('auth'));
+
+            dispatch(initializeForm('login'));
+            
             navigate('/na-docs');
         }
     }, [user]);

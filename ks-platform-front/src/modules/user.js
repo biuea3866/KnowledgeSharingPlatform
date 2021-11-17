@@ -26,6 +26,8 @@ function logoutSaga() {
         call(authAPI.logout);
 
         localStorage.removeItem('token');
+
+        localStorage.removeItem('user');
     } catch(e) {
         console.log(e);
     }

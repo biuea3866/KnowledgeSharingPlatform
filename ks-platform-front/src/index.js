@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import rootReducer, { rootSaga } from './modules';
 import { CookiesProvider } from 'react-cookie';
+import { saveUser } from './modules/user';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -18,7 +19,23 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
 
+function loadUser() {
+  try {
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    if(!user) {
+      return;
+    }
+
+    store.dispatch(saveUser());
+  } catch(e) {
+    console.log(e);
+  }
+}
+
 sagaMiddleware.run(rootSaga);
+
+loadUser();
 
 ReactDOM.render(
   <Provider store={ store }>
