@@ -68,11 +68,9 @@ class LoginView(APIView) :
                                    algorithm='HS256');
                 
                 response = JsonResponse({
-                    "payload": None,
+                    "payload": token,
                     "message": "Successfully login"
                 });
-
-                response.headers['token'] = token;
 
                 return response;
             

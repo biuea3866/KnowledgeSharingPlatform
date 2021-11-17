@@ -78,7 +78,7 @@ const LoginForm = () => {
             return;
         };
 
-        if(localStorage.getItem('token')) {
+        if(auth.token) {
             dispatch(saveUser());
         }
     }, [dispatch, authError]);
