@@ -72,10 +72,8 @@ class LoginView(APIView) :
                     "message": "Successfully login"
                 });
 
-                response.set_cookie(key='token', 
-                                    value=token, 
-                                    httponly=True);
-                
+                response.headers['token'] = token;
+
                 return response;
             
             return JsonResponse({

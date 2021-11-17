@@ -8,10 +8,12 @@ export const login = ({
     password
 }, { 
     withCredentails: true 
-}).then(Response => {
-    console.log(Response);
+}).then(response => {
+    console.log(response);
 
     // localStorage.setItem('token', getCookies('token'));
+}).catch(err => {
+    console.log(err)
 });
 
 export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
