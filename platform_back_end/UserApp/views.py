@@ -85,7 +85,9 @@ class LoginView(APIView) :
 
 class UserView(APIView) :
     def get(self, request) :
-        token = request.COOKIES.get('token');
+        print(request);
+        
+        token = request.META['HTTP_AUTHORIZATION'];
 
         if not token :
             raise AuthenticationFailed('Unauthenticated!');

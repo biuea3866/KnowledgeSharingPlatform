@@ -70,10 +70,6 @@ const LoginForm = () => {
             email,
             password
         }));
-
-        const { cookies } = new Cookies();
-
-        console.log(cookies)
     };
 
     useEffect(() => {
@@ -84,6 +80,10 @@ const LoginForm = () => {
         };
 
         if(auth) {
+            const token = auth;
+
+            localStorage.setItem('token', token);
+
             dispatch(saveUser());
         }
     }, [dispatch, auth, authError]);
