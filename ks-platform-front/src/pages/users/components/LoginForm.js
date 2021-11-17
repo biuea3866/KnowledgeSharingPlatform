@@ -76,6 +76,11 @@ const LoginForm = () => {
 
             return;
         };
+
+        if(localStorage.getItem('token')) {
+            // logic about get-user
+            console.log("Successfully get token")
+        }
     }, [auth, authError]);
 
     return(

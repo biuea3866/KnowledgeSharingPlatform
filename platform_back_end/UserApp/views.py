@@ -75,7 +75,7 @@ class LoginView(APIView) :
                 response.set_cookie(key='token', 
                                     value=token, 
                                     httponly=True);
-                                    
+
                 return response;
             
             return JsonResponse({
@@ -182,10 +182,14 @@ class ModifyView(APIView) :
 
 class LogoutView(APIView) :
     def post(self, request) :
-        return JsonResponse({
+        response = JsonResponse({
             'payload': None,
             'message': "Successfully logout!"
-        }).delete_cookie('token');
+        });
+
+        response.delete_cookie('token'); 
+
+        return response;
 
 class DeleteView(APIView) :
     def put(self, request) :
