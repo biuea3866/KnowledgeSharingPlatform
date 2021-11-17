@@ -66,17 +66,13 @@ class LoginView(APIView) :
                 token = jwt.encode(payload, 
                                    'secret', 
                                    algorithm='HS256');
-                response = HttpResponse();
                 
-                response.set_cookie(key='token', 
-                                    value=token, 
-                                    httponly=True);
-                response.data = {
+                return JsonResponse({
                     "payload": None,
                     "message": "Successfully login"
-                };
-
-                return response;
+                }).set_cookie(key='token', 
+                              value=token, 
+                              httponly=True);
             
             return JsonResponse({
                 "payload": None,
@@ -188,15 +184,10 @@ class ModifyView(APIView) :
 
 class LogoutView(APIView) :
     def post(self, request) :
-        response  = HttpResponse();
-
-        response.delete_cookie('token');
-        response.data = {
+        return JsonResponse({
             'payload': None,
             'message': "Successfully logout!"
-        };
-
-        return response;
+        }).delete_cookie('token');
 
 class DeleteView(APIView) :
     def put(self, request) :
