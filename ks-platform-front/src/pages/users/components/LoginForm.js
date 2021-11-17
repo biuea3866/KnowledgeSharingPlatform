@@ -82,9 +82,11 @@ const LoginForm = () => {
         if(auth) {
             const token = auth;
 
-            localStorage.setItem('token', token);
+            localStorage.setItem('token', JSON.stringify(token));
 
             dispatch(saveUser());
+
+            dispatch(initializeForm('auth'));
         }
     }, [dispatch, auth, authError]);
 

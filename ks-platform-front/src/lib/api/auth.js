@@ -10,7 +10,7 @@ export const login = ({
 
 export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
     headers: {
-        'Authorization': 'Bearer ' + JSON.parse(localStorage.getItem('token'))
+        'Authorization': JSON.parse(localStorage.getItem('token'))
     }
 });
 
