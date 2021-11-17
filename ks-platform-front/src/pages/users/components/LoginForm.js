@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import { changeField, initializeForm, login } from '../../../modules/auth';
+import { saveUser } from '../../../modules/user';
 import FullButton from '../../components/common/FullButton';
 import Input from '../../components/common/Input';
 
@@ -78,10 +79,9 @@ const LoginForm = () => {
         };
 
         if(localStorage.getItem('token')) {
-            // logic about get-user
-            console.log("Successfully get token")
+            dispatch(saveUser());
         }
-    }, [auth, authError]);
+    }, [dispatch, authError]);
 
     return(
         <FormBlock>

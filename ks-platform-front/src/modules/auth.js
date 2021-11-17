@@ -34,6 +34,8 @@ export const login = createAction(LOGIN, ({
     password
 }));
 
+export const getUser = createAction(GET_USER);
+
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
 
 export function* authSaga() {
