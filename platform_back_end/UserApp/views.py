@@ -52,10 +52,10 @@ class LoginView(APIView) :
                 user = User.objects.filter(email=email).first()
 
                 if user is None :
-                    raise AuthenticationFailed('Error: User not found!');
+                    raise AuthenticationFailed('User not found!');
 
                 if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) is False :
-                    raise AuthenticationFailed('Error: Incorrect password');
+                    raise AuthenticationFailed('Incorrect password');
 
                 payload = {
                     'user_id': user.user_id,
@@ -90,7 +90,7 @@ class UserView(APIView) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Error: Unauthenticated!');
+            raise AuthenticationFailed('Unauthenticated!');
 
         try :
             payload = jwt.decode(token, 
@@ -99,10 +99,7 @@ class UserView(APIView) :
             user = User.objects.get(user_id=payload['user_id']);
 
             if not user :
-                return JsonResponse({
-                    'payload': None,
-                    'message': "Error: User not found"
-                });
+                raise AuthenticationFailed('User not found!');
 
             user_serializer = UserSerializer(user);
 
@@ -112,14 +109,14 @@ class UserView(APIView) :
             }); 
 
         except jwt.ExpiredSignatureError :
-            raise AuthenticationFailed('Error: Unauthenticated!');
+            raise AuthenticationFailed('Unauthenticated!');
 
 class UsersView(APIView) :
     def get(self, request) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Error: Unauthenticated!');
+            raise AuthenticationFailed('Unauthenticated!');
 
         try :
             jwt.decode(token, 
@@ -129,10 +126,7 @@ class UsersView(APIView) :
             users = User.objects.all().filter(is_active=True);
 
             if not users :
-                return JsonResponse({
-                    'payload': None,
-                    'message': "Error: Users not found"
-                });
+                raise AuthenticationFailed('Users not found');
 
             user_serializer = UsersSerializer(users, 
                                               many=True);
@@ -143,21 +137,21 @@ class UsersView(APIView) :
             });
 
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Error: Unauthenticated!');
+            raise AuthenticationFailed('Unauthenticated!');
 
 class ModifyView(APIView) :
     def put(self, request) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Error: Unauthenticated!');
+            raise AuthenticationFailed('Unauthenticated!');
 
         try :
             vo = JSONParser().parse(request);
             user = User.objects.get(user_id=vo['user_id']);
 
             if not user :
-                raise AuthenticationFailed('Error: User not found');
+                raise AuthenticationFailed('User not found');
 
             user_serializer = ModifySerializer(user, 
                                                data=vo,
@@ -194,14 +188,14 @@ class DeleteView(APIView) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Error: Unauthenticated');
+            raise AuthenticationFailed('Unauthenticated');
 
         try :
             vo = JSONParser().parse(request);
             user = User.objects.get(user_id=vo['user_id']);
 
             if not user :
-                raise AuthenticationFailed('Error: User not found');
+                raise AuthenticationFailed('User not found');
 
             user_serializer = DeleteSerializer(user, 
                                                data=vo,
