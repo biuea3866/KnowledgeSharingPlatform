@@ -1,5 +1,5 @@
 import client from './client';
-import getCookies from '../utils/cookie';
+import { getCookies } from '../utils/cookie';
 
 export const login = ({
     email,
