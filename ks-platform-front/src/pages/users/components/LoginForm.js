@@ -6,6 +6,7 @@ import { changeField, initializeForm, login } from '../../../modules/auth';
 import { saveUser } from '../../../modules/user';
 import FullButton from '../../components/common/FullButton';
 import Input from '../../components/common/Input';
+import { Cookies } from 'react-cookie';
 
 const FormBlock = styled.div`
     display: flex;
@@ -69,6 +70,10 @@ const LoginForm = () => {
             email,
             password
         }));
+
+        const { cookies } = new Cookies();
+
+        console.log(cookies)
     };
 
     useEffect(() => {
@@ -79,7 +84,7 @@ const LoginForm = () => {
         };
 
         if(auth) {
-            dispatch(saveUser(token));
+            dispatch(saveUser());
         }
     }, [dispatch, auth, authError]);
 
