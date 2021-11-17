@@ -74,12 +74,8 @@ const LoginForm = () => {
         if(authError) {
             setError(authError);
 
-            return
+            return;
         };
-
-        // if(auth) {
-        //     const { userId } = auth;
-        // }
     }, [auth, authError]);
 
     return(

@@ -22,7 +22,7 @@ export default function createRequestSaga(type, request) {
             
             console.log(response);
 
-            if(response.data.message.includes('Error')) {
+            if(response.data.message.includes('Error:')) {
                 yield put({
                     type: FAILURE,
                     payload: response.data.message,

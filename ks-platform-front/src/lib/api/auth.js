@@ -6,4 +6,4 @@ export const login = ({
 }) => client.post('http://18.177.184.216/auth/login', {
     email,
     password
-});
+}, { withCredentails: true });

@@ -4,7 +4,7 @@ from django.http.response import JsonResponse, HttpResponse;
 
 from rest_framework.exceptions import AuthenticationFailed, ValidationError;
 
-import jwt, datetime, bcrypt
+import jwt, datetime, bcrypt;
 
 from .models import User;
 from .serializers.register_serializer import RegisterSerializer;
@@ -30,7 +30,7 @@ class RegisterView(APIView) :
 
             return JsonResponse({
                 'payload': None,
-                'message': 'Failed to register'
+                'message': 'Error: Failed to register'
             });
 
         except ValidationError as e:
@@ -52,10 +52,10 @@ class LoginView(APIView) :
                 user = User.objects.filter(email=email).first()
 
                 if user is None :
-                    raise AuthenticationFailed('User not found!');
+                    raise AuthenticationFailed('Error: User not found!');
 
                 if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) is False :
-                    raise AuthenticationFailed('Incorrect password');
+                    raise AuthenticationFailed('Error: Incorrect password');
 
                 payload = {
                     'user_id': user.user_id,
@@ -66,8 +66,8 @@ class LoginView(APIView) :
                 token = jwt.encode(payload, 
                                    'secret', 
                                    algorithm='HS256');
-                response = HttpResponse();
-
+                response = JsonResponse();
+                
                 response.set_cookie(key='token', 
                                     value=token, 
                                     httponly=True);
@@ -80,7 +80,7 @@ class LoginView(APIView) :
             
             return JsonResponse({
                 "payload": None,
-                "message": "Falied to login"
+                "message": "Error: Falied to login"
             });
 
         except Exception as e :
@@ -94,7 +94,7 @@ class UserView(APIView) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Unauthenticated!');
+            raise AuthenticationFailed('Error: Unauthenticated!');
 
         try :
             payload = jwt.decode(token, 
@@ -105,7 +105,7 @@ class UserView(APIView) :
             if not user :
                 return JsonResponse({
                     'payload': None,
-                    'message': "User not found"
+                    'message': "Error: User not found"
                 });
 
             user_serializer = UserSerializer(user);
@@ -116,14 +116,14 @@ class UserView(APIView) :
             }); 
 
         except jwt.ExpiredSignatureError :
-            raise AuthenticationFailed('Unauthenticated!');
+            raise AuthenticationFailed('Error: Unauthenticated!');
 
 class UsersView(APIView) :
     def get(self, request) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Unauthenticated!');
+            raise AuthenticationFailed('Error: Unauthenticated!');
 
         try :
             jwt.decode(token, 
@@ -135,7 +135,7 @@ class UsersView(APIView) :
             if not users :
                 return JsonResponse({
                     'payload': None,
-                    'message': "Users not found"
+                    'message': "Error: Users not found"
                 });
 
             user_serializer = UsersSerializer(users, 
@@ -147,21 +147,21 @@ class UsersView(APIView) :
             });
 
         except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed('Unauthenticated!');
+            raise AuthenticationFailed('Error: Unauthenticated!');
 
 class ModifyView(APIView) :
     def put(self, request) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Unauthenticated!');
+            raise AuthenticationFailed('Error: Unauthenticated!');
 
         try :
             vo = JSONParser().parse(request);
             user = User.objects.get(user_id=vo['user_id']);
 
             if not user :
-                raise AuthenticationFailed('User not found');
+                raise AuthenticationFailed('Error: User not found');
 
             user_serializer = ModifySerializer(user, 
                                                data=vo,
@@ -177,7 +177,7 @@ class ModifyView(APIView) :
 
             return JsonResponse({
                 'payload': None,
-                'message': "Failed to update user"
+                'message': "Error: Failed to update user"
             });
         
         except Exception as e:
@@ -188,7 +188,7 @@ class ModifyView(APIView) :
 
 class LogoutView(APIView) :
     def post(self, request) :
-        response  = HttpResponse();
+        response  = JsonResponse();
 
         response.delete_cookie('token');
         response.data = {
@@ -203,14 +203,14 @@ class DeleteView(APIView) :
         token = request.COOKIES.get('token');
 
         if not token :
-            raise AuthenticationFailed('Unauthenticated');
+            raise AuthenticationFailed('Error: Unauthenticated');
 
         try :
             vo = JSONParser().parse(request);
             user = User.objects.get(user_id=vo['user_id']);
 
             if not user :
-                raise AuthenticationFailed('User not found');
+                raise AuthenticationFailed('Error: User not found');
 
             user_serializer = DeleteSerializer(user, 
                                                data=vo,
@@ -226,7 +226,7 @@ class DeleteView(APIView) :
 
             return JsonResponse({
                 'payload': None,
-                'message': "Falied to delete user"
+                'message': "Error: Falied to delete user"
             });
         except Exception as e:
             return JsonResponse({
