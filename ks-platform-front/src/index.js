@@ -9,6 +9,7 @@ import createSagaMiddleware from 'redux-saga';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import rootReducer, { rootSaga } from './modules';
+import { CookiesProvider } from 'react-cookie';
 
 const sagaMiddleware = createSagaMiddleware();
 
@@ -21,9 +22,11 @@ sagaMiddleware.run(rootSaga);
 
 ReactDOM.render(
   <Provider store={ store }>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <CookiesProvider>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </CookiesProvider>
   </Provider>,
   document.getElementById('root')
 );

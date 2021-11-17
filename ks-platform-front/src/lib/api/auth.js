@@ -1,5 +1,4 @@
 import client from './client';
-import { getCookies } from '../utils/cookie';
 
 export const login = ({
     email,
@@ -9,10 +8,10 @@ export const login = ({
     password
 }, { 
     withCredentails: true 
-}).then((Response) => {
-    console.log(getCookies('token'));
+}).then(Response => {
+    console.log(Response);
 
-    localStorage.setItem('token', getCookies('token'));
+    // localStorage.setItem('token', getCookies('token'));
 });
 
 export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
