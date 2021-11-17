@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import { changeField, initializeForm, login } from '../../../modules/auth';
 import { saveUser } from '../../../modules/user';
-import { withRouter } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import FullButton from '../../components/common/FullButton';
 import Input from '../../components/common/Input';
 
@@ -24,6 +24,7 @@ const ErrorMessage = styled.div`
 
 const LoginForm = ({ history }) => {
     const [error, setError] = useState('');
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const { 
         form,
@@ -92,7 +93,7 @@ const LoginForm = ({ history }) => {
 
     useEffect(() => {
         if(user) {
-            history.push('/na-docs');
+            navigate('/na-docs');
         }
     }, [user]);
 
@@ -121,4 +122,4 @@ const LoginForm = ({ history }) => {
     );
 };
 
-export default withRouter(LoginForm);
+export default LoginForm;
