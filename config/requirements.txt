@@ -2,7 +2,6 @@ django
 djongo
 dnspython
 bcrypt
-jwt
 uwsgi
 djangorestframework
 django_cors_headers
