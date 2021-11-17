@@ -78,10 +78,10 @@ const LoginForm = () => {
             return;
         };
 
-        if(auth.token) {
-            dispatch(saveUser());
+        if(auth) {
+            dispatch(saveUser(token));
         }
-    }, [dispatch, authError]);
+    }, [dispatch, auth, authError]);
 
     return(
         <FormBlock>

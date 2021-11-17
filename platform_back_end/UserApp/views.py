@@ -68,10 +68,14 @@ class LoginView(APIView) :
                                    algorithm='HS256');
                 
                 response = JsonResponse({
-                    "payload": token,
+                    "payload": None,
                     "message": "Successfully login"
                 });
 
+                response.set_cookie(key='token', 
+                                    value=token, 
+                                    httponly=True);
+                
                 return response;
             
             return JsonResponse({
