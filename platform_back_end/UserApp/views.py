@@ -162,7 +162,7 @@ class UsersView(APIView) :
             raise AuthenticationFailed('Unauthenticated!');
 
         try :
-            users = User.objects.filter(is_active=True);
+            users = User.objects.all();
 
             user_serializer = UsersSerializer(users, 
                                               many=True);
