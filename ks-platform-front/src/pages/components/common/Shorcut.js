@@ -11,10 +11,13 @@ const Icon = styled.img`
 
 const Shortcut = ({
     path,
-    src
+    src,
+    onClick
 }) => {
     return(
-        <Link to={ path } >
+        <Link to={ path } 
+              onClick={ onClick ? onClick : null }
+        >
             <Icon src={ src } />
         </Link>
     );

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import HeaderTemplate from '../components/common/HeaderTemplate';
 
 const HomePage = () => {

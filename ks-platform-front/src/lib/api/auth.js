@@ -8,6 +8,28 @@ export const login = ({
     password
 });
 
+export const register = ({
+    email,
+    password,
+    nickname,
+    name,
+    department,
+    role,
+    is_active
+}) => client.post('http://18.177.184.216/auth/register', {
+    email,
+    password,
+    nickname,
+    name,
+    department,
+    role,
+    is_active
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
 export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
     headers: {
         'Authorization': JSON.parse(localStorage.getItem('token'))

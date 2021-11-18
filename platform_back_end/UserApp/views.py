@@ -16,6 +16,11 @@ from .serializers.delete_serializer import DeleteSerializer;
 
 class RegisterView(APIView) :
     def post(self, request) :
+        token = request.META['HTTP_AUTHORIZATION'];
+
+        if not token :
+            raise AuthenticationFailed('Unauthenticated!');
+
         try :
             vo = JSONParser().parse(request);
             user_serializer = RegisterSerializer(data=vo);

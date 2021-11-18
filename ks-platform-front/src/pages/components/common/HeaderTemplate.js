@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux'; 
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import Logo from './Logo';
@@ -8,6 +9,7 @@ import settings_outline from '../../../static/img/ionicons.designerpack/settings
 import clipboard_outline from '../../../static/img/ionicons.designerpack/clipboard-outline.svg';
 import person_outline from '../../../static/img/ionicons.designerpack/person-outline.svg';
 import exit_outline from '../../../static/img/ionicons.designerpack/exit-outline.svg';
+import { initialize, logout } from '../../../modules/user';
 
 const Box = styled.div`
     width: 100%;
@@ -32,6 +34,7 @@ const Title = styled.div`
     justify-content: left;
     align-items: center;
     padding-left: 30px;
+    font-family: impact;
     a {
         color: ${palette.red[3]};
     }
@@ -47,6 +50,15 @@ const Nav = styled.div`
 `;
 
 const HeaderTemplate = () => {
+    const dispatch = useDispatch();
+    const onLogout = e => {
+        e.preventDefault();
+
+        dispatch(logout());
+
+        dispatch(initialize('user'));    
+    };
+ 
     return(
         <Box>
             <Header>
@@ -67,8 +79,9 @@ const HeaderTemplate = () => {
                 <Shortcut path="/na-docs/user/my-page"
                           src={ person_outline }
                 />
-                <Shortcut path="/na-docs/auth/logout" 
+                <Shortcut path="#" 
                           src={ exit_outline }
+                          onClick={ onLogout }
                 />
             </Nav>
         </Box>

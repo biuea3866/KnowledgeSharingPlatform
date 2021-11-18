@@ -1,9 +1,21 @@
-import React from 'react';
-import { Route, Routes } from 'react-router';
+import React, { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { Route, Routes, useNavigate } from 'react-router';
+import AdminPage from './pages/admin/AdminPage';
+import RegisterPage from './pages/admin/RegisterPage';
 import HomePage from './pages/main/HomePage';
 import LoginPage from './pages/users/LoginPage';
 
 const App = () => {
+    const { user } = useSelector(({ user }) => ({ user: user.user }));
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if(user === null) {
+            navigate('/na-docs/login');    
+        }
+    }, [user])
+
     return(
         <Routes>
             <Route element={ <HomePage /> }
@@ -12,6 +24,14 @@ const App = () => {
             />
             <Route element={ <LoginPage /> } 
                    path="/na-docs/login"
+                   exact
+            />
+            <Route element={ <AdminPage /> }
+                   path="/na-docs/admin"
+                   exact
+            />
+            <Route element={ <RegisterPage /> }
+                   path="/na-docs/admin/register"
                    exact
             />
         </Routes>

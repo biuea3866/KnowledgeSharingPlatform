@@ -22,7 +22,7 @@ const ErrorMessage = styled.div`
     margin-top: 1rem;
 `;
 
-const LoginForm = ({ history }) => {
+const LoginForm = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
@@ -106,7 +106,7 @@ const LoginForm = ({ history }) => {
             
             navigate('/na-docs');
         }
-    }, [user]);
+    }, [dispatch, user]);
 
     return(
         <FormBlock>
