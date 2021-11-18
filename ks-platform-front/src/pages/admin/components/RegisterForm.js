@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import RadioForm from '../../components/common/RadioForm';
 import RadioItem from '../../components/common/RadioItem';
 import BorderButton from '../../components/common/BorderButton';
 import FullButton from '../../components/common/FullButton';
 import BottomlineInput from '../../components/common/BottomlineInput';
+import { useDispatch, useSelector } from 'react-redux';
+import { changeField } from '../../../modules/auth';
 
 const ButtonGroup = styled.div`
     display: flex;
@@ -41,14 +43,68 @@ const AddForm = styled.form`
 `;
 
 const RegisterForm = () => {
+    const { form } = useSelector(({ auth }) => ({ form: auth.register }));
+    const [error, setError] = useState('');
+    const dispatch = useDispatch();
     const onChangeField = e => {
         const { 
             value,
             name
         } = e.target;
-        
-    };
 
+        dispatch(changeField({
+            form: 'register',
+            key: name,
+            value
+        }));
+    };
+    const onRegister = e => {
+        e.preventDefault();
+
+        const {
+            email,
+            password,
+            passwordConfirm,
+            nickname,
+            name,
+            department,
+            role,
+            is_active
+        } = form;
+
+        if([email,
+            password,
+            passwordConfirm,
+            nickname,
+            name,
+            department,
+            role,
+            is_active].includes('')) {
+            setError('입력하지 않은 사항이 있습니다.')        
+        
+            return;
+        }
+
+        if(!email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i)) {
+            setError('이메일 정규식 표현이 아닙니다.');
+
+            return
+        }
+
+        if(password.length < 8) {
+            setError('비밀번호를 8자리 이상이 아닙니다.');
+
+            return;
+        }
+
+        if(password !== passwordConfirm) {
+            setError('비밀번호가 일치하지 않습니다.');
+
+            return;
+        }
+
+
+    }
     return(
         <Block>
             <AddForm>
@@ -70,32 +126,32 @@ const RegisterForm = () => {
                 </RoleRadio>
                 <BottomlineInput autoComplete="email"
                                  name="email"
-                                 placeholder="E-mail"
+                                 placeholder="na-docs@example.com"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="password"
                                  name="password"
-                                 placeholder="Password"
+                                 placeholder="8자리 이상 비밀번호"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="re-password"
                                  name="passwordConfirm"
-                                 placeholder="Re-password"
+                                 placeholder="비밀번호 재입력"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="name"
                                  name="name"
-                                 placeholder="Name"
+                                 placeholder="이름"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="department"
                                  name="department"
-                                 placeholder="Department"
+                                 placeholder="부서"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="nickname"
                                  name="nickname"
-                                 placeholder="Nickname"
+                                 placeholder="닉네임"
                                  onChange={ onChangeField }
                 />
                 <ButtonGroup>

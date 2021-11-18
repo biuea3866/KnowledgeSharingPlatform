@@ -69,6 +69,7 @@ const initialState = {
     register: {
         email: '',
         password: '',
+        passwordConfirm: '',
         nickname: '',
         name: '',
         department: '',

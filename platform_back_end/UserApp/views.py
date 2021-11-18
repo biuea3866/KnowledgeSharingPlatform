@@ -44,6 +44,46 @@ class RegisterView(APIView) :
                 'message': 'Error: ' + str(e)
             });
 
+class CheckEmailView(APIView) :
+    def get(self, request, email) :
+        try :
+            if not User.objects.get(email=email).exists() :
+                return JsonResponse({
+                    "payload": True,
+                    "message": "Available email!"
+                });
+
+            return JsonResponse({
+                "payload": False,
+                "message":"Already existed email!"
+            });
+
+        except Exception as e :
+            return JsonResponse({
+                "payload": None,
+                "message": "Error: " + str(e)
+            });
+
+class CheckNicknameView(APIView) :
+     def get(self, request, nickname) :
+        try :
+            if not User.objects.get(nickname=nickname).exists() :
+                return JsonResponse({
+                    "payload": True,
+                    "message": "Available nickname!"
+                });
+
+            return JsonResponse({
+                "payload": False,
+                "message":"Already existed nickname!"
+            });
+
+        except Exception as e :
+            return JsonResponse({
+                "payload": None,
+                "message": "Error: " + str(e)
+            });
+
 class LoginView(APIView) :
     def post(self, request) :
         try :
