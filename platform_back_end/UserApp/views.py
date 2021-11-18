@@ -162,7 +162,7 @@ class UsersView(APIView) :
             raise AuthenticationFailed('Unauthenticated!');
 
         try :
-            users = User.objects.all().filter(is_active=True);
+            users = User.objects.filter(is_active=True);
 
             if not users :
                 raise AuthenticationFailed('Users not found');

@@ -21,7 +21,7 @@ const AdminPage = () => {
         <>
             <HeaderTemplate />
             {
-                user.role.includes('ADMIN') ?
+                user?
                 <AdminFragment /> : <Loading />
             }
         </>
