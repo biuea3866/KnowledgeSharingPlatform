@@ -47,7 +47,7 @@ class RegisterView(APIView) :
 class CheckEmailView(APIView) :
     def get(self, request, email) :
         try :
-            if not User.objects.get(email=email).exists() :
+            if not User.objects.filter(email=email).exists() :
                 return JsonResponse({
                     "payload": True,
                     "message": "Available email!"
@@ -67,7 +67,7 @@ class CheckEmailView(APIView) :
 class CheckNicknameView(APIView) :
      def get(self, request, nickname) :
         try :
-            if not User.objects.get(nickname=nickname).exists() :
+            if not User.objects.filter(nickname=nickname).exists() :
                 return JsonResponse({
                     "payload": True,
                     "message": "Available nickname!"

@@ -16,6 +16,14 @@ const [REGISTER,
        REGISTER_SUCCESS,
        REGISTER_FAILURE] = createRequestActionTypes('auth/REGISTER');
 
+const [CHECK_EMAIL,
+       CHECK_EMAIL_SUCCESS,
+       CHECK_EMAIL_FAILURE] = createRequestActionTypes('auth/CHECK_EMAIL');
+
+const [CHECK_NICKNAME,
+       CHECK_NICKNAME_SUCCESS,
+       CHECK_NICKNAME_FAILURE] = createRequestActionTypes('auth/CHECK_NICKNAME');
+
 export const changeField = createAction(
     CHANGE_FIELD, ({
         form,
@@ -56,13 +64,23 @@ export const register = createAction(REGISTER, ({
     is_active
 }));
 
+export const checkEmail = createAction(CHECK_EMAIL, email => email);
+
+export const checkNickname = createAction(CHECK_NICKNAME, nickname => nickname);
+
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register);
 
+const checkEmailSaga = createRequestSaga(CHECK_EMAIL, authAPI.checkEmail);
+
+const checkNicknameSaga = createRequestSaga(CHECK_NICKNAME, authAPI.checkNickname);
+
 export function* authSaga() {
     yield takeLatest(LOGIN, loginSaga);
     yield takeLatest(REGISTER, registerSaga);
+    yield takeLatest(CHECK_EMAIL, checkEmailSaga);
+    yield takeLatest(CHECK_NICKNAME, checkNicknameSaga);
 };
 
 const initialState = {
@@ -80,6 +98,8 @@ const initialState = {
         email: '',
         password: '',
     },
+    checkedEmail: null,
+    checkedNickname: null,
     auth: null,
     authError: null,
 };
@@ -109,6 +129,22 @@ const auth = handleActions(
             auth
         }),
         [REGISTER_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            authError: error
+        }),
+        [CHECK_EMAIL_SUCCESS]: (state, { payload: checkedEmail }) => ({
+            ...state,
+            checkedEmail,
+        }),
+        [CHECK_EMAIL_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            authError: error
+        }),
+        [CHECK_NICKNAME_SUCCESS]: (state, { payload: checkedNickname }) => ({
+            ...state,
+            checkedNickname
+        }),
+        [CHECK_NICKNAME_FAILURE]: (state, { payload: error }) => ({
             ...state,
             authError: error
         }),

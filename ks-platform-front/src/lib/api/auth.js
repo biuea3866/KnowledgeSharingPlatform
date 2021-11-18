@@ -30,6 +30,10 @@ export const register = ({
     }
 });
 
+export const checkEmail = email => client.get(`http://18.177.184.216/auth/check/email/${email}`);
+
+export const checkNickname = nickname => client.get(`http://18.177.184.216/auth/check/nickname/${nickname}`);
+
 export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
     headers: {
         'Authorization': JSON.parse(localStorage.getItem('token'))

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import RadioForm from '../../components/common/RadioForm';
 import RadioItem from '../../components/common/RadioItem';
@@ -6,7 +6,8 @@ import BorderButton from '../../components/common/BorderButton';
 import FullButton from '../../components/common/FullButton';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeField } from '../../../modules/auth';
+import { changeField, checkEmail, checkNickname } from '../../../modules/auth';
+import { useNavigate } from 'react-router';
 
 const ButtonGroup = styled.div`
     display: flex;
@@ -43,7 +44,16 @@ const AddForm = styled.form`
 `;
 
 const RegisterForm = () => {
-    const { form } = useSelector(({ auth }) => ({ form: auth.register }));
+    const { 
+        form,
+        checkedEmail,
+        checkedNickname
+    } = useSelector(({ auth }) => ({ 
+        form: auth.register,
+        checkedEmail: auth.checkEmail,
+        checkedNickname: auth.checkNickname
+    }));
+    const navigate = useNavigate();
     const [error, setError] = useState('');
     const dispatch = useDispatch();
     const onChangeField = e => {
@@ -105,6 +115,19 @@ const RegisterForm = () => {
 
 
     }
+
+    useEffect(() => {
+        const { email } = form;
+
+        dispatch(checkEmail(email));
+    }, [dispatch, form]);
+
+    useEffect(() => {
+        const { nickname } = form;
+
+        dispatch(checkNickname(nickname));
+    }, [dispatch, form]);
+
     return(
         <Block>
             <AddForm>
