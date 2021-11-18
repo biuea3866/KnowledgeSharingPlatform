@@ -6,8 +6,9 @@ import BorderButton from '../../components/common/BorderButton';
 import FullButton from '../../components/common/FullButton';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import { useDispatch, useSelector } from 'react-redux';
-import { changeField, checkEmail, checkNickname } from '../../../modules/auth';
+import { changeField, checkEmail, checkNickname, initializeForm, register } from '../../../modules/auth';
 import { useNavigate } from 'react-router';
+import palette from '../../../lib/styles/palette';
 
 const ButtonGroup = styled.div`
     display: flex;
@@ -18,11 +19,13 @@ const ButtonGroup = styled.div`
 
 const AddButton = styled(FullButton)`
     width: 130px;
+    cursor: pointer;
 `;
 
 const CancelButton = styled(BorderButton)`
     width: 130px;
     margin-left: 20px;
+    cursor: pointer;
 `;
 
 const Block = styled.div`
@@ -43,15 +46,24 @@ const AddForm = styled.form`
     flex-direction: column;
 `;
 
+const ErrorMessage = styled.div`
+    color: ${palette.red[0]};
+    text-align: center;
+    font-size: 14px;
+    margin-top: 1rem;
+`;
+
 const RegisterForm = () => {
     const { 
+        auth,
         form,
         checkedEmail,
         checkedNickname
     } = useSelector(({ auth }) => ({ 
+        auth: auth.auth,
         form: auth.register,
-        checkedEmail: auth.checkEmail,
-        checkedNickname: auth.checkNickname
+        checkedEmail: auth.checkedEmail,
+        checkedNickname: auth.checkedNickname
     }));
     const navigate = useNavigate();
     const [error, setError] = useState('');
@@ -67,6 +79,15 @@ const RegisterForm = () => {
             key: name,
             value
         }));
+    };
+    const onCancel = e => {
+        e.preventDefault();
+
+        dispatch(initializeForm('auth'));
+
+        dispatch(initializeForm('authError'));    
+
+        navigate('/na-docs/admin');
     };
     const onRegister = e => {
         e.preventDefault();
@@ -113,24 +134,64 @@ const RegisterForm = () => {
             return;
         }
 
-
+        if(checkedEmail && checkedNickname) {
+            setError(null);
+            
+            dispatch(register({
+                email,
+                password,
+                nickname,
+                name,
+                department,
+                role,
+                is_active
+            }));
+        }
     }
 
     useEffect(() => {
         const { email } = form;
 
         dispatch(checkEmail(email));
-    }, [dispatch, form]);
+
+        if(!checkedEmail) {
+            setError('이메일 중복!');
+            
+            return;
+        }
+
+        setError(null);
+    }, [checkedEmail, form]);
 
     useEffect(() => {
         const { nickname } = form;
 
         dispatch(checkNickname(nickname));
-    }, [dispatch, form]);
+
+        if(!checkedNickname) {
+            setError('닉네임 중복!');
+            
+            return;
+        }
+
+        setError(null);
+    }, [checkedNickname, form]);
+
+    useEffect(() => {
+        if(auth) {
+            dispatch(initializeForm('auth'));
+
+            dispatch(initializeForm('authError'));
+
+            setError(null);
+
+            navigate('/na-docs');
+        }
+    }, [dispatch, auth]);
 
     return(
         <Block>
-            <AddForm>
+            <AddForm onSubmit={ onRegister }>
                 <RoleRadio>
                     <RadioForm>
                         <RadioItem id="ADMIN"
@@ -154,11 +215,13 @@ const RegisterForm = () => {
                 />
                 <BottomlineInput autoComplete="password"
                                  name="password"
+                                 type="password"
                                  placeholder="8자리 이상 비밀번호"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="re-password"
                                  name="passwordConfirm"
+                                 type="password"
                                  placeholder="비밀번호 재입력"
                                  onChange={ onChangeField }
                 />
@@ -177,9 +240,10 @@ const RegisterForm = () => {
                                  placeholder="닉네임"
                                  onChange={ onChangeField }
                 />
+                { error && <ErrorMessage>{ error }</ErrorMessage>}
                 <ButtonGroup>
                     <AddButton red>추가</AddButton>
-                    <CancelButton>취소</CancelButton>
+                    <CancelButton onClick={ onCancel }>취소</CancelButton>
                 </ButtonGroup>
             </AddForm>
         </Block>

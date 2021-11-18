@@ -40,4 +40,10 @@ export const getUser = () => client.get('http://18.177.184.216/auth/get-user', {
     }
 });
 
+export const getUsers = () => client.get('http://18.177.184.216/auth/', {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
 export const logout = () => client.post('http://18.177.184.216/auth/logout');

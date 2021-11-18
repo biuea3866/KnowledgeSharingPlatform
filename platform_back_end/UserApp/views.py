@@ -162,10 +162,6 @@ class UsersView(APIView) :
             raise AuthenticationFailed('Unauthenticated!');
 
         try :
-            jwt.decode(token, 
-                       'secret', 
-                       algorithms='HS256');
-
             users = User.objects.all().filter(is_active=True);
 
             if not users :
