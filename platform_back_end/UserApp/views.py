@@ -164,9 +164,6 @@ class UsersView(APIView) :
         try :
             users = User.objects.filter(is_active=True);
 
-            if not users :
-                raise AuthenticationFailed('Users not found');
-
             user_serializer = UsersSerializer(users, 
                                               many=True);
 
