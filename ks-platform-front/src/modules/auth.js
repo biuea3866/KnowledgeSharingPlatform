@@ -24,6 +24,14 @@ const [CHECK_NICKNAME,
        CHECK_NICKNAME_SUCCESS,
        CHECK_NICKNAME_FAILURE] = createRequestActionTypes('auth/CHECK_NICKNAME');
 
+const [DELETE_USER,
+       DELETE_USER_SUCCESS,
+       DELETE_USER_FAILURE] = createRequestActionTypes('auth/DELETE_USER');
+
+const [MODIFY_USER,
+       MODIFY_USER_SUCCESS,
+       MODIFY_USER_FAILURE] = createRequestActionTypes('auth/MODIFY_USER');
+
 export const changeField = createAction(
     CHANGE_FIELD, ({
         form,
@@ -68,6 +76,24 @@ export const checkEmail = createAction(CHECK_EMAIL, email => email);
 
 export const checkNickname = createAction(CHECK_NICKNAME, nickname => nickname);
 
+export const deleteUser = createAction(DELETE_USER, ({
+    is_active,
+    user_id
+}) => ({ 
+    is_active,
+    user_id
+}));
+
+export const modifyUser = createAction(MODIFY_USER, ({
+    user_id,
+    password,
+    nickname
+}) => ({
+    user_id,
+    password,
+    nickname
+}));
+
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register);
@@ -76,11 +102,17 @@ const checkEmailSaga = createRequestSaga(CHECK_EMAIL, authAPI.checkEmail);
 
 const checkNicknameSaga = createRequestSaga(CHECK_NICKNAME, authAPI.checkNickname);
 
+const deleteUserSaga = createRequestSaga(DELETE_USER, authAPI.deleteUser);
+
+const modifyUserSaga = createRequestSaga(MODIFY_USER, authAPI.modifyUser);
+
 export function* authSaga() {
     yield takeLatest(LOGIN, loginSaga);
     yield takeLatest(REGISTER, registerSaga);
     yield takeLatest(CHECK_EMAIL, checkEmailSaga);
     yield takeLatest(CHECK_NICKNAME, checkNicknameSaga);
+    yield takeLatest(DELETE_USER, deleteUserSaga);
+    yield takeLatest(MODIFY_USER, modifyUserSaga);
 };
 
 const initialState = {
@@ -97,6 +129,16 @@ const initialState = {
     login: {
         email: '',
         password: '',
+    },
+    delete: {
+        is_active: false,
+        user_id: ''
+    },
+    modify: {
+        password: '',
+        passwordConfirm: '',
+        nickname: '',
+        user_id: ''
     },
     checkedEmail: null,
     checkedNickname: null,
@@ -148,6 +190,22 @@ const auth = handleActions(
             ...state,
             authError: error
         }),
+        [DELETE_USER_SUCCESS]: (state, { payload: auth }) => ({
+            ...state,
+            auth,
+        }),
+        [DELETE_USER_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            authError: error,
+        }),
+        [MODIFY_USER_SUCCESS]: (state, { payload: auth }) => ({
+            ...state,
+            auth
+        }),
+        [MODIFY_USER_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            authError: error,
+        })
     },
     initialState,
 );

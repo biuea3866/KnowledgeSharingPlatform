@@ -10,10 +10,12 @@ const AdminPage = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (!user.role.includes('ADMIN')) {
-            alert('Not had admin role!');
+        if (user) {
+            if(!user.role.includes('ADMIN')) {
+                alert('Not had admin role!');
 
-            navigate('/na-docs');
+                navigate('/na-docs');
+            }
         }
     }, [user]);
 

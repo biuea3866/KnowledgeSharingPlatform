@@ -5,6 +5,7 @@ import AdminPage from './pages/admin/AdminPage';
 import RegisterPage from './pages/admin/RegisterPage';
 import HomePage from './pages/main/HomePage';
 import LoginPage from './pages/users/LoginPage';
+import ModifyPage from './pages/users/ModifyPage';
 
 const App = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
@@ -32,6 +33,10 @@ const App = () => {
             />
             <Route element={ <RegisterPage /> }
                    path="/na-docs/admin/register"
+                   exact
+            />
+            <Route element={ <ModifyPage /> }
+                   path="/na-docs/user/my-page"
                    exact
             />
         </Routes>

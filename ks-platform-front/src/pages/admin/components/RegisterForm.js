@@ -42,7 +42,7 @@ const RoleRadio = styled.div`
 
 const AddForm = styled.form`
     display: flex;
-    width: 90%;
+    width: 60%;
     flex-direction: column;
 `;
 
@@ -183,6 +183,12 @@ const RegisterForm = () => {
 
             dispatch(initializeForm('authError'));
 
+            dispatch(initializeForm('register'));
+
+            dispatch(initializeForm('checkedEmail'));
+
+            dispatch(initializeForm('checkedNickname'));
+
             setError(null);
 
             navigate('/na-docs');
@@ -196,13 +202,13 @@ const RegisterForm = () => {
                     <RadioForm>
                         <RadioItem id="ADMIN"
                                    name="role"
-                                   value="관리자"
+                                   value="ADMIN"
                                    for="ADMIN"
                                    onChange={ onChangeField }
                         />
                         <RadioItem id="USER"
                                    name="role"
-                                   value="일반"
+                                   value="USER"
                                    for="USER"
                                    onChange={ onChangeField }
                         />

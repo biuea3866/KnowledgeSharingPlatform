@@ -6,6 +6,7 @@ class UsersSerializer(serializers.ModelSerializer) :
         model = User;
         fields = ('email',
                   'password',
+                  'nickname',
                   'name',
                   'department',
                   'role',

@@ -46,4 +46,30 @@ export const getUsers = () => client.get('http://18.177.184.216/auth/', {
     }
 });
 
+export const deleteUser = ({
+    is_active,
+    user_id
+}) => client.put('http://18.177.184.216/auth/delete', {
+    is_active,
+    user_id
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
+export const modifyUser = ({
+    user_id,
+    password,
+    nickname
+}) => client.put('http://18.177.184.216/auth/modify', {
+    user_id,
+    password,
+    nickname
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
 export const logout = () => client.post('http://18.177.184.216/auth/logout');
