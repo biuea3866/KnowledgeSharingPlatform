@@ -32,17 +32,15 @@ const [MODIFY_USER,
        MODIFY_USER_SUCCESS,
        MODIFY_USER_FAILURE] = createRequestActionTypes('auth/MODIFY_USER');
 
-export const changeField = createAction(
-    CHANGE_FIELD, ({
-        form,
-        key,
-        value
-    }) => ({
-        form,
-        key,
-        value
-    }),
-);
+export const changeField = createAction(CHANGE_FIELD, ({
+    form,
+    key,
+    value
+}) => ({
+    form,
+    key,
+    value
+}));
 
 export const initializeForm = createAction(INITIALIZE_FORM, form => form);
 
