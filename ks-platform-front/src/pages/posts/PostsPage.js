@@ -1,14 +1,14 @@
 import React from 'react';
 import HeaderTemplate from '../components/common/HeaderTemplate';
-import SearchFragment from './components/SearchFragment';
+import PostsFragment from './components/PostsFragment';
 
-const HomePage = () => {
+const PostsPage = () => {
     return(
         <>
             <HeaderTemplate />
-            <SearchFragment />
+            <PostsFragment />
         </>
     );
 };
 
-export default HomePage;
+export default PostsPage;

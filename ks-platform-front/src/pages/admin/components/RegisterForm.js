@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { changeField, checkEmail, checkNickname, initializeForm, register } from '../../../modules/auth';
 import { useNavigate } from 'react-router';
 import palette from '../../../lib/styles/palette';
+import Swal from 'sweetalert2';
 
 const ButtonGroup = styled.div`
     display: flex;
@@ -190,6 +191,14 @@ const RegisterForm = () => {
             dispatch(initializeForm('checkedNickname'));
 
             setError(null);
+
+            Swal.fire({
+                title: "Message",
+                text: "Successfully register user!",
+                icon: 'success',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
             navigate('/na-docs');
         }

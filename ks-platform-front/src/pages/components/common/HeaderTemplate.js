@@ -17,6 +17,7 @@ const Box = styled.div`
     position: fixed;
     background-color: white;
     box-shadow: 0 1px 2px 1px rgba(0, 0, 0, 0.1);
+    z-index: 1;
 `;
 
 const Header = styled.div`
@@ -73,7 +74,7 @@ const HeaderTemplate = () => {
                 <Shortcut path="/na-docs/admin"
                           src={ settings_outline }
                 />
-                <Shortcut path="/na-docs/posts"
+                <Shortcut path="/na-docs/posts/write"
                           src={ clipboard_outline }
                 />
                 <Shortcut path="/na-docs/user/my-page"

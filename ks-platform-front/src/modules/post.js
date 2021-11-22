@@ -12,6 +12,10 @@ const [WRITE_POST,
        WRITE_POST_SUCCESS,
        WRITE_POST_FAILURE] = createRequestActionTypes('post/WRITE_POST');
 
+const [GET_POST,
+       GET_POST_SUCCESS,
+       GET_POST_FAILURE] = createRequestActionTypes('post/GET_POST');
+
 export const initialize = createAction(INITIALIZE_FORM, form => form);
 
 export const changeField = createAction(CHANGE_FIELD, ({
@@ -36,10 +40,15 @@ export const writePost = createAction(WRITE_POST, ({
     user_id
 }));
 
+export const getPost = createAction(GET_POST, post_id => post_id);
+
 const writePostSaga = createRequestSaga(WRITE_POST, postAPI.write);
+
+const getPostSaga = createRequestSaga(GET_POST, postAPI.getPost);
 
 export function* postSaga() {
     yield takeLatest(WRITE_POST, writePostSaga);
+    yield takeLatest(GET_POST, getPostSaga);
 }
 
 const initialState = {
@@ -55,7 +64,7 @@ const initialState = {
 
 const post = handleActions(
     {
-        [CHANGE_FIELD]: (state, { payload: { form, key, value }}) => 
+        [CHANGE_FIELD]: (state, { payload: { form, key, value }}) =>
         produce(state, draft => {
             draft[form][key] = value;
         }),
@@ -70,9 +79,17 @@ const post = handleActions(
         [WRITE_POST_FAILURE]: (state, { payload: error }) => ({
             ...state,
             postError: error,
-        })
+        }),
+        [GET_POST_SUCCESS]: (state, { payload: post }) => ({
+            ...state,
+            post,
+        }),
+        [GET_POST_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            postError: error
+        }),
     },
-    initialState
+    initialState,
 );
 
 export default post;

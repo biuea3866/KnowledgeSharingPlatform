@@ -1,14 +1,14 @@
 import React from 'react';
 import HeaderTemplate from '../components/common/HeaderTemplate';
-import SearchFragment from './components/SearchFragment';
+import WriteFragment from './components/WriteFragment';
 
-const HomePage = () => {
+const WritePage = () => {
     return(
         <>
             <HeaderTemplate />
-            <SearchFragment />
+            <WriteFragment />
         </>
     );
 };
 
-export default HomePage;
+export default WritePage;

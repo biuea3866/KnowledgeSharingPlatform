@@ -1,12 +1,12 @@
 import React from 'react';
 import HeaderTemplate from '../components/common/HeaderTemplate';
-import WriteFragment from './components/WriteFragment';
+import PostFragment from './components/PostFragment';
 
 const PostPage = () => {
     return(
         <>
             <HeaderTemplate />
-            <WriteFragment />
+            <PostFragment />
         </>
     );
 };

@@ -43,7 +43,7 @@ const Row = styled.div`
     float: left;
     height: 70px;
     text-align: left;
-    font-size: 1.125rem;
+    font-size: 1.5rem;
 `;
 
 const ErrorMessage = styled.div`
