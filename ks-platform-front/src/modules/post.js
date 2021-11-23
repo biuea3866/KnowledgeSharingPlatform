@@ -106,9 +106,9 @@ const post = handleActions(
             ...state,
             postError: error
         }),
-        [ADD_TAG_SUCCESS]: (state, { payload: tag }) => ({
+        [ADD_TAG_SUCCESS]: (state, { payload: post }) => ({
             ...state,
-            tag
+            post
         }),
         [ADD_TAG_FAILURE]: (state, { payload: error }) => ({
             ...state,

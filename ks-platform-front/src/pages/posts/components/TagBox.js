@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
@@ -80,33 +80,21 @@ const TagBox = () => {
             tag,
             post_id
         }));
-
-        dispatch(getPost(post_id));
     };
 
-    const dummy = [
-        { 'tag': "tag-01" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" },
-        { 'tag': "tag-02" }
-    ]
+    useMemo(() => {
+        const { post_id } = post;
+
+        // dispatch(getPost(post_id));
+    }, [dispatch, post.tags]);
+
     return(
         <Box>
             <TagTable>
                 {
-                    dummy.map(item => <Tag>
+                    post.tags.map(item => <Tag>
                                             { item.tag }
-                                      </Tag>)
+                                          </Tag>)
                 }
             </TagTable>
             <TagForm onSubmit={ onTag }>
