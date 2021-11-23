@@ -82,12 +82,6 @@ const TagBox = () => {
         }));
     };
 
-    useMemo(() => {
-        const { post_id } = post;
-
-        // dispatch(getPost(post_id));
-    }, [dispatch, post.tags]);
-
     return(
         <Box>
             <TagTable>

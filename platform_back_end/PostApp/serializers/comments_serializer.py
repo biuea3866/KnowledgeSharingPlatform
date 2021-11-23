@@ -5,13 +5,8 @@ from ..models.comment_model import Comment;
 class CommentsSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Comment;
-        fields = ('title',
-                  'contents',
-                  'comments',
-                  'tags',
-                  'created_at',
-                  'updated_at',
-                  'update_count',
+        fields = ('content',
+                  'name',
                   'is_secret',
-                  'user_id',
-                  'post_id');
+                  'post_id',
+                  'created_at');
