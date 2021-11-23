@@ -1,8 +1,6 @@
-import React, { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import { useNavigate } from 'react-router';
 import styled from 'styled-components';
-import { getPost } from '../../../modules/post';
 
 const Block = styled.div`
     backgroud-color: white;
@@ -44,11 +42,8 @@ const Contents = styled.div`
 `;
 
 const PostCard = post => {
-    const dispatch = useDispatch();
     const navigate = useNavigate();
     const toPost = e => {
-        dispatch(getPost(post.post.post_id));
-    
         navigate(`/na-docs/post/${post.post.post_id}`);
     };
 

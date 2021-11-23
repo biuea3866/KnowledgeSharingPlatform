@@ -13,4 +13,5 @@ class DetailSerializer(serializers.ModelSerializer) :
                   'updated_at',
                   'update_count',
                   'is_secret',
-                  'user_id');
+                  'user_id',
+                  'post_id');

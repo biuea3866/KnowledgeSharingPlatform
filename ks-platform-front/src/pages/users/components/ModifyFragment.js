@@ -41,7 +41,7 @@ const ModifyForm = styled.form`
 
 const Row = styled.div`
     float: left;
-    height: 70px;
+    height: 50px;
     text-align: left;
     font-size: 1.5rem;
 `;

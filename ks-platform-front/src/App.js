@@ -8,7 +8,7 @@ import WritePage from './pages/posts/WritePage';
 import PostsPage from './pages/posts/PostsPage';
 import LoginPage from './pages/users/LoginPage';
 import ModifyPage from './pages/users/ModifyPage';
-import PostPage from './pages/posts/WritePage';
+import PostPage from './pages/posts/PostPage';
 
 const App = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));

@@ -15,7 +15,8 @@ class ModifySerializer(serializers.ModelSerializer) :
                   'updated_at',
                   'update_count',
                   'is_secret',
-                  'user_id');
+                  'user_id',
+                  'post_id');
 
     def update(self, instance, validated_data) :
         if instance.comments != validated_data['comments'] :

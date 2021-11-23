@@ -6,4 +6,4 @@ class TagsSerializer(serializers.ModelSerializer) :
     class Meta :
         model = Tag;
         fields = ('tag',
-                'post_id');
+                  'post_id');

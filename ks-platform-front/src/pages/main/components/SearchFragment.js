@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import palette from '../../../lib/styles/palette';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import search_outline from '../../../static/img/ionicons.designerpack/search-outline.svg';
-import { changeField, initialize, searchPosts } from '../../../modules/posts';
+import { changeField, initialize } from '../../../modules/posts';
 import Swal from 'sweetalert2';
 
 const Block = styled.div`
@@ -43,13 +43,7 @@ const SearchIcon = styled.img`
 `;
 
 const SearchFragment = () => {
-    const { 
-        keyword, 
-        posts,
-    } = useSelector(({ posts }) => ({ 
-        keyword: posts.keyword,
-        posts: posts.posts
-    }));
+    const { keyword } = useSelector(({ posts }) => ({ keyword: posts.keyword }));
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const onChangeKeyword = e => {
@@ -74,16 +68,14 @@ const SearchFragment = () => {
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'
             });
+
+            return;
         }
 
-        dispatch(searchPosts(keyword));
+        navigate('/na-docs/posts', {
+            state: keyword
+        });
     };
-
-    useEffect(() => {
-        if(posts) {
-            navigate('/na-docs/posts');
-        }
-    }, [dispatch, posts])
 
     useEffect(() => {
         dispatch(initialize('posts'));

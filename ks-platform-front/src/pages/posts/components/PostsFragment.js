@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import search_outline from '../../../static/img/ionicons.designerpack/search-outline.svg';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import PostCard from './PostCard';
+import { useLocation, useNavigate } from 'react-router';
+import { changeField, searchPosts } from '../../../modules/posts';
+import Loading from '../../components/common/Loading';
+import Swal from 'sweetalert2';
+import palette from '../../../lib/styles/palette';
 
 const Block = styled.div`
     padding-top: 200px;
@@ -43,24 +48,77 @@ const Article = styled.div`
 `;
 
 const PostsFragment = () => {
-    const { posts } = useSelector(({ posts }) => ({ posts: posts.posts }));
-    
+    const { 
+        keyword,
+        posts 
+    } = useSelector(({ posts }) => ({ 
+        keyword: posts.keyword,
+        posts: posts.posts 
+    }));
+    const { state } = useLocation();
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const onChangeKeyword = e => {
+        e.preventDefault();
+
+        const {
+            name,
+            value
+        } = e.target;
+
+        dispatch(changeField({
+            key: name,
+            value 
+        }));
+    };
+    const onSearch = e => {
+        if([keyword].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "Please check search input!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+
+        navigate('/na-docs/posts', {
+            state: keyword
+        });
+    };
+
+    useEffect(() => {
+        dispatch(searchPosts(state))
+    }, [dispatch, state])
+
     return(
         <Block>
-            <SearchForm>
-                <BottomlineInput />
-                <SearchIcon src={ search_outline } />
-            </SearchForm>
-            <Article>
-                { posts.length } 개의 검색 결과
-            </Article>
-            <PostsTable>
-                { 
-                    posts.map(post => {
-                        return <PostCard post={ post } />
-                    })
-                }
-            </PostsTable>
+            {
+                !posts ?
+                <Loading /> :
+                <>
+                    <SearchForm>
+                        <BottomlineInput name="keyword"
+                                         onChange={ onChangeKeyword }
+                        />
+                        <SearchIcon src={ search_outline } 
+                                    onClick={ onSearch }
+                        />
+                    </SearchForm>
+                    <Article>
+                        { posts.length } 개의 검색 결과
+                    </Article>
+                    <PostsTable>
+                        { 
+                            posts.map(post => {
+                                return <PostCard post={ post } />
+                            })
+                        }
+                    </PostsTable>
+                </>
+            }
         </Block>
     );
 };

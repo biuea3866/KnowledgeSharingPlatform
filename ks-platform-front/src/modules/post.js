@@ -16,6 +16,10 @@ const [GET_POST,
        GET_POST_SUCCESS,
        GET_POST_FAILURE] = createRequestActionTypes('post/GET_POST');
 
+const [ADD_TAG,
+       ADD_TAG_SUCCESS,
+       ADD_TAG_FAILURE] = createRequestActionTypes('post/ADD_TAG');
+
 export const initialize = createAction(INITIALIZE_FORM, form => form);
 
 export const changeField = createAction(CHANGE_FIELD, ({
@@ -42,13 +46,24 @@ export const writePost = createAction(WRITE_POST, ({
 
 export const getPost = createAction(GET_POST, post_id => post_id);
 
+export const addTag = createAction(ADD_TAG, ({
+    tag,
+    post_id
+}) => ({
+    tag,
+    post_id
+}));
+
 const writePostSaga = createRequestSaga(WRITE_POST, postAPI.write);
 
 const getPostSaga = createRequestSaga(GET_POST, postAPI.getPost);
 
+const addTagSaga = createRequestSaga(ADD_TAG, postAPI.addTag);
+
 export function* postSaga() {
     yield takeLatest(WRITE_POST, writePostSaga);
     yield takeLatest(GET_POST, getPostSaga);
+    yield takeLatest(ADD_TAG, addTagSaga);
 }
 
 const initialState = {
@@ -57,6 +72,9 @@ const initialState = {
         contents: '',
         is_secret: false,
         user_id: ''
+    },
+    tags: {
+        tag: ''
     },
     post: null,
     postError: null
@@ -88,6 +106,14 @@ const post = handleActions(
             ...state,
             postError: error
         }),
+        [ADD_TAG_SUCCESS]: (state, { payload: tag }) => ({
+            ...state,
+            tag
+        }),
+        [ADD_TAG_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            postError: error
+        })
     },
     initialState,
 );
