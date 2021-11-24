@@ -26,12 +26,13 @@ services:
 
   app:
     container_name: ks-platform-front
-    build: ./ks-platform-front
-    restart: "on-failure"
-    expose:
-      - 3000
+    build: 
+      context: ./ks-platform-front
+      dockerfile: Dockerfile
     volumes:
       - "./ks-platform-front:/app"
       - "/app/node_modules"
+    ports:
+      - '3001:3000'
     environment:
       - NODE_ENV=development
