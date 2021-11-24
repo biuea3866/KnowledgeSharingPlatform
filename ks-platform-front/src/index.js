@@ -9,6 +9,8 @@ import createSagaMiddleware from 'redux-saga';
 import reportWebVitals from './reportWebVitals';
 import { BrowserRouter } from 'react-router-dom';
 import rootReducer, { rootSaga } from './modules';
+import { persistStore } from 'redux-persist';
+import { PersistGate } from 'redux-persist/integration/react';
 import { saveUser } from './modules/user';
 
 const sagaMiddleware = createSagaMiddleware();
@@ -17,6 +19,8 @@ const store = createStore(
     rootReducer,
     composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
+
+const persistor = persistStore(store);
 
 function loadUser() {
     try {
@@ -38,9 +42,11 @@ loadUser();
 
 ReactDOM.render(
     <Provider store={ store }>
-        <BrowserRouter>
-            <App />
-        </BrowserRouter>
+        <PersistGate persistor={ persistor }>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </PersistGate>
     </Provider>,
   document.getElementById('root')
 );

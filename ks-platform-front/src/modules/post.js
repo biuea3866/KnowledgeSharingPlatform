@@ -77,10 +77,12 @@ export const addComment = createAction(ADD_COMMENT, ({
 export const editPost = createAction(EDIT_POST, ({
     title,
     contents,
+    is_secret,
     post_id
 }) => ({
     title,
     contents,
+    is_secret,
     post_id
 }));
 
@@ -121,6 +123,7 @@ const initialState = {
     edit: {
         title: '',
         contents: '',
+        is_secret: false,
         post_id: ''
     },
     post: null,

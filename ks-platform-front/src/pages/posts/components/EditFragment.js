@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router';
-import { changeField, editPost } from '../../../modules/post';
+import { changeField, editPost, initialize } from '../../../modules/post';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import BorderButton from '../../components/common/BorderButton';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import FullButton from '../../components/common/FullButton';
 import $ from 'jquery';
+import Swal from 'sweetalert2';
 
 const Block = styled.div`
     padding-top: 150px;
@@ -23,6 +24,7 @@ const Nav = styled.div`
     float: left;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
 `;
 
 const ButtonGroup = styled.div`
@@ -50,6 +52,7 @@ const Article = styled.div`
     border: none;
     border-bottom: 1px solid ${ palette.gray[2] };
     padding-bottom: 10px;
+    margin-top: 20px;
 `;
 
 const FormBlock = styled.form`
@@ -65,6 +68,12 @@ const EditInput = styled(BottomlineInput)`
 
 const Summernote = styled.textarea`
     z-index: 100;
+`;
+
+const SecretRow = styled.div`
+    width: 80%;
+    display: flex;
+    justify-content: flex-start;
 `;
 
 const SecretBox = styled.label`
@@ -139,21 +148,53 @@ const EditFragment = () => {
         }));
     };
     const onCheckSecret = e => {
+        const { name } = e.target;
 
+        if(e.target.checked) {
+            dispatch(changeField({
+                form: 'edit',
+                key: name,
+                value: true
+            }));
+        } else {
+            dispatch(changeField({
+                form: 'edit',
+                key: name,
+                value: false
+            }));
+        }
     };
     const onCancel = e => {
+        dispatch(initialize('edit'));
+
+        setFlag(false);
+
         navigate(-1);
     };
     const onEdit = e => {
+        if([form.title].includes('')) {
+            dispatch(changeField({
+                form: 'edit',
+                key: 'title',
+                value: post.title
+            }));
+        }
+
         dispatch(changeField({
             form: 'edit',
             key: 'contents',
             value: $('#summernote-value').val()
         }));
 
+        dispatch(changeField({
+            form: 'edit',
+            key: 'post_id',
+            value: post.post_id
+        }));
+
         setFlag(true);
     };
-    
+
     useEffect(() => {
         const script = document.createElement('script');
         
@@ -175,46 +216,54 @@ const EditFragment = () => {
 
         document.body.append(script);
     }, []);
-
+    
     useEffect(() => {
-        const {
-            title,
-            contents,
-            is_secret,
-            user_id
-        } = form;
-
-        if([title].includes('')) {
-            return;
-        }
-
-        if([contents].includes('')) {
-            return;
-        }
-
         if(flag) {
+            const {
+                title,
+                contents,
+                is_secret,
+                post_id
+            } = form;
+
+            if([title].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "Please Fill in title!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
+
+                return;
+            }
+
+            if([contents].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "Please Fill in contents!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
+
+                return;
+            }
+
             dispatch(editPost({
                 title,
                 contents,
                 is_secret,
-                user_id
+                post_id
             }));
+
+            navigate(-1);
         }
-    }, [dispatch, flag]);
-    
+    }, [dispatch, form, flag]);
+
     return(
         <Block>
             <Nav>
-                <SecretBox for="check"
-                           className="check-box"
-                >
-                    <Checkbox type="checkbox"
-                              id="check"
-                              name="is_secret"
-                              onClick={ onCheckSecret }
-                    />
-                    <Checkmark className="on"></Checkmark>
-                </SecretBox>
                 <ButtonGroup>
                     <EditButton onClick={ onEdit }>
                         편집
@@ -226,6 +275,19 @@ const EditFragment = () => {
                     </CancelButton>
                 </ButtonGroup>
             </Nav>
+            <SecretRow>
+                <SecretBox for="check"
+                           className="check-box"
+                >
+                    <Checkbox type="checkbox"
+                              id="check"
+                              name="is_secret"
+                              onClick={ onCheckSecret }
+                    />
+                    <Checkmark className="on"></Checkmark>
+                </SecretBox>
+                비공개
+            </SecretRow>
             <Article>
                 작성일 { post.created_at.substring(0, 10) } | 수정일 { post.updated_at.substring(0, 10)  } | 총 { post.update_count } 회 수정
             </Article>
@@ -238,6 +300,10 @@ const EditFragment = () => {
                             name="contents"
                             value={ post.contents }
                 />  
+                <input id="summernote-value" 
+                       type="hidden"
+                       value={ post.contents }
+                />
             </FormBlock>
         </Block>
     );

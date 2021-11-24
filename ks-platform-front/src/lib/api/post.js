@@ -59,10 +59,12 @@ export const addComment = ({
 export const edit = ({
     title,
     contents,
+    is_secret,
     post_id
 }) => client.put(`http://18.177.184.216/posts/${post_id}/modify`, {
     title,
     contents,
+    is_secret,
     post_id
 }, {
     headers: {
