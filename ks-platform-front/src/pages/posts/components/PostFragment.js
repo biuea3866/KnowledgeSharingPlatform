@@ -1,16 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useMatch } from 'react-router';
+import { useMatch, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import { getPost } from '../../../modules/post';
 import BorderButton from '../../components/common/BorderButton';
-import FullButton from '../../components/common/FullButton';
 import Loading from '../../components/common/Loading';
+import CommentBox from './CommentBox';
 import TagBox from './TagBox';
 
 const Block = styled.div`
-    padding-top: 200px;
+    padding-top: 150px;
     display: flex;
     width: 100%;
     flex-direction: column;
@@ -19,21 +19,16 @@ const Block = styled.div`
 `;
 
 const Nav = styled.div`
-    width: 80%;
+    width: 90%;
     float: left;
     display: flex;
     justify-content: flex-end;
 `;
+
 const ButtonGroup = styled.div`
     display: flex;
     justify-content: flex-end;
-    margin-top: 50px;
     margin-bottom: 100px;
-`;
-
-const UndoButton = styled(FullButton)`
-    width: 130px;
-    cursor: pointer;
 `;
 
 const EditButton = styled(BorderButton)`
@@ -73,12 +68,23 @@ const Contents = styled.div`
     padding-bottom: 10px;
 `;
 
-const CommentBox = styled.div``;
-
 const PostFragment = () => {
-    const { post } = useSelector(({ post }) => ({ post: post.post }));
+    const { 
+        post,
+        user
+    } = useSelector(({ 
+        post,
+        user
+    }) => ({ 
+        post: post.post,
+        user: user.user
+    }));
     const match = useMatch('/na-docs/post/:post_id');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    const toEdit = e => {
+        navigate(`/na-docs/post/edit/${post.post_id}`);
+    };
 
     useEffect(() => {
         const { post_id } = match.params;
@@ -93,12 +99,12 @@ const PostFragment = () => {
                 <>
                     <Nav>
                         <ButtonGroup>
-                            <UndoButton red>
-                                게시글 목록
-                            </UndoButton>
-                            <EditButton>
-                                편집
-                            </EditButton>
+                            {
+                                post.user_id === user.user_id &&
+                                <EditButton onClick={ toEdit }>
+                                    편집
+                                </EditButton>
+                            }
                         </ButtonGroup>
                     </Nav>
                     <Article>
@@ -109,8 +115,8 @@ const PostFragment = () => {
                     </Title>
                     <TagBox />
                     <Contents dangerouslySetInnerHTML={{ __html: post.contents }}/>
-                </> :
-                <Loading />
+                    <CommentBox />
+                </> : <Loading />
             }
         </Block>
     );

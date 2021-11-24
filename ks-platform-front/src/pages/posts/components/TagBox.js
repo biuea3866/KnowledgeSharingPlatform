@@ -1,8 +1,8 @@
-import React, { useEffect, useMemo } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
-import { addTag, changeField, getPost } from '../../../modules/post';
+import { addTag, changeField } from '../../../modules/post';
 import BottomlineInput from '../../components/common/BottomlineInput';
 import FullButton from '../../components/common/FullButton';
 
@@ -52,10 +52,15 @@ const Tag = styled.div`
 const TagBox = () => {
     const { 
         post, 
-        form
-    } = useSelector(({ post }) => ({ 
+        form,
+        user
+    } = useSelector(({ 
+        post,
+        user 
+    }) => ({ 
         post: post.post,
-        form: post.tags
+        form: post.tags,
+        user: user.user
     }));
     const dispatch = useDispatch();
     const onChangeTag = e => {
@@ -87,19 +92,22 @@ const TagBox = () => {
             <TagTable>
                 {
                     post.tags.map(item => <Tag>
-                                            { item.tag }
+                                              { item.tag }
                                           </Tag>)
                 }
             </TagTable>
-            <TagForm onSubmit={ onTag }>
-                <TagInput placeholder="Enter tag!"
-                          name="tag"
-                          onChange={ onChangeTag }
-                />
-                <TagButton red>
-                    추가
-                </TagButton>
-            </TagForm>
+            {
+                user.user_id === post.user_id &&
+                <TagForm onSubmit={ onTag }>
+                    <TagInput placeholder="Enter tag!"
+                            name="tag"
+                            onChange={ onChangeTag }
+                    />
+                    <TagButton red>
+                        추가
+                    </TagButton>
+                </TagForm>
+            }
         </Box>
     );
 };

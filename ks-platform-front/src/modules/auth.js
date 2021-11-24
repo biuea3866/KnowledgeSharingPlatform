@@ -138,8 +138,8 @@ const initialState = {
         nickname: '',
         user_id: ''
     },
-    checkedEmail: null,
-    checkedNickname: null,
+    checkedEmail: true,
+    checkedNickname: true,
     auth: null,
     authError: null,
 };

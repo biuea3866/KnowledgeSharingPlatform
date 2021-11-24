@@ -20,6 +20,14 @@ const [ADD_TAG,
        ADD_TAG_SUCCESS,
        ADD_TAG_FAILURE] = createRequestActionTypes('post/ADD_TAG');
 
+const [ADD_COMMENT,
+       ADD_COMMENT_SUCCESS,
+       ADD_COMMENT_FAILURE] = createRequestActionTypes('post/ADD_COMMENT');
+
+const [EDIT_POST,
+       EDIT_POST_SUCCESS,
+       EDIT_POST_FAILURE] = createRequestActionTypes('post/EDIT_POST');
+
 export const initialize = createAction(INITIALIZE_FORM, form => form);
 
 export const changeField = createAction(CHANGE_FIELD, ({
@@ -54,17 +62,32 @@ export const addTag = createAction(ADD_TAG, ({
     post_id
 }));
 
+export const addComment = createAction(ADD_COMMENT, ({
+    content,
+    name,
+    is_secret,
+    post_id
+}) => ({
+    content,
+    name,
+    is_secret,
+    post_id
+}));
+
 const writePostSaga = createRequestSaga(WRITE_POST, postAPI.write);
 
 const getPostSaga = createRequestSaga(GET_POST, postAPI.getPost);
 
 const addTagSaga = createRequestSaga(ADD_TAG, postAPI.addTag);
 
+const addCommentSaga = createRequestSaga(ADD_COMMENT, postAPI.addComment);
+
 export function* postSaga() {
     yield takeLatest(WRITE_POST, writePostSaga);
     yield takeLatest(GET_POST, getPostSaga);
     yield takeLatest(ADD_TAG, addTagSaga);
-}
+    yield takeLatest(ADD_COMMENT, addCommentSaga);
+};
 
 const initialState = {
     write: {
@@ -75,6 +98,12 @@ const initialState = {
     },
     tags: {
         tag: ''
+    },
+    comment: {
+        content: '',
+        name: '',
+        is_secret: false,
+        post_id: ''
     },
     post: null,
     postError: null
@@ -113,7 +142,15 @@ const post = handleActions(
         [ADD_TAG_FAILURE]: (state, { payload: error }) => ({
             ...state,
             postError: error
-        })
+        }),
+        [ADD_COMMENT_SUCCESS]: (state, { payload: post }) => ({
+            ...state,
+            post
+        }),
+        [ADD_COMMENT_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            portError: error
+        }),
     },
     initialState,
 );

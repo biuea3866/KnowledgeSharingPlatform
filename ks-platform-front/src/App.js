@@ -9,6 +9,7 @@ import PostsPage from './pages/posts/PostsPage';
 import LoginPage from './pages/users/LoginPage';
 import ModifyPage from './pages/users/ModifyPage';
 import PostPage from './pages/posts/PostPage';
+import EditPage from './pages/posts/EditPage';
 
 const App = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
@@ -52,6 +53,10 @@ const App = () => {
             />
             <Route element={ <PostPage /> }
                    path="/na-docs/post/:post_id"
+                   exact
+            />
+            <Route element={ <EditPage /> }
+                   path="/na-docs/post/edit/:post_id"
                    exact
             />
         </Routes>

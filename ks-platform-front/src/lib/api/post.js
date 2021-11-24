@@ -39,3 +39,23 @@ export const addTag = ({
         'Authorization': JSON.parse(localStorage.getItem('token'))
     }
 });
+
+export const addComment = ({
+    content,
+    name,
+    is_secret,
+    post_id
+}) => client.put(`http://18.177.184.216/posts/${post_id}/comment`, {
+    content,
+    name,
+    is_secret,
+    post_id
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
+export const edit = ({
+
+}) => client.put()

@@ -238,6 +238,7 @@ class ModifyView(APIView) :
 
             updated_post = DetailSerializer(post).data;
             
+            updated_post['title'] = vo['title'];
             updated_post['contents'] = vo['contents'];
 
             post_serializer = ModifySerializer(post,
