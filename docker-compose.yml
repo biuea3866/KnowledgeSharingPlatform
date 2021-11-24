@@ -23,3 +23,15 @@ services:
       gunicorn platform_back_end.wsgi:application -b 0:80"
     volumes:
       - ./platform_back_end:/platform_back_end
+
+  app:
+    container_name: ks-platform-front
+    build: .
+    restart: always
+    volumes:
+      - ".:/app"
+      - "/app/node_modules"
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
