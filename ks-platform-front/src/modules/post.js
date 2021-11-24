@@ -74,6 +74,16 @@ export const addComment = createAction(ADD_COMMENT, ({
     post_id
 }));
 
+export const editPost = createAction(EDIT_POST, ({
+    title,
+    contents,
+    post_id
+}) => ({
+    title,
+    contents,
+    post_id
+}));
+
 const writePostSaga = createRequestSaga(WRITE_POST, postAPI.write);
 
 const getPostSaga = createRequestSaga(GET_POST, postAPI.getPost);
@@ -82,11 +92,14 @@ const addTagSaga = createRequestSaga(ADD_TAG, postAPI.addTag);
 
 const addCommentSaga = createRequestSaga(ADD_COMMENT, postAPI.addComment);
 
+const editPostSaga = createRequestSaga(EDIT_POST, postAPI.edit);
+
 export function* postSaga() {
     yield takeLatest(WRITE_POST, writePostSaga);
     yield takeLatest(GET_POST, getPostSaga);
     yield takeLatest(ADD_TAG, addTagSaga);
     yield takeLatest(ADD_COMMENT, addCommentSaga);
+    yield takeLatest(EDIT_POST, editPostSaga);
 };
 
 const initialState = {
@@ -103,6 +116,11 @@ const initialState = {
         content: '',
         name: '',
         is_secret: false,
+        post_id: ''
+    },
+    edit: {
+        title: '',
+        contents: '',
         post_id: ''
     },
     post: null,
@@ -150,6 +168,14 @@ const post = handleActions(
         [ADD_COMMENT_FAILURE]: (state, { payload: error }) => ({
             ...state,
             portError: error
+        }),
+        [EDIT_POST_SUCCESS]: (state, { payload: post }) => ({
+            ...state,
+            post
+        }),
+        [EDIT_POST_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            postError: error
         }),
     },
     initialState,

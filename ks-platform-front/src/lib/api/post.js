@@ -57,5 +57,15 @@ export const addComment = ({
 });
 
 export const edit = ({
-
-}) => client.put()
+    title,
+    contents,
+    post_id
+}) => client.put(`http://18.177.184.216/posts/${post_id}/modify`, {
+    title,
+    contents,
+    post_id
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});

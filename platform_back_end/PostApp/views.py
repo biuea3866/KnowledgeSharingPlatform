@@ -240,7 +240,8 @@ class ModifyView(APIView) :
             
             updated_post['title'] = vo['title'];
             updated_post['contents'] = vo['contents'];
-
+            updated_post['is_secret'] = vo['is_secret'];
+            
             post_serializer = ModifySerializer(post,
                                                data=updated_post,
                                                partial=True);
