@@ -121,10 +121,10 @@ const UserCard = user => {
                     user_id
                 } = form;
 
-                dispatch(resurrectUser({
-                    is_active,
-                    user_id
-                }));
+                // dispatch(resurrectUser({
+                //     is_active,
+                //     user_id
+                // }));
             }
         });
     };

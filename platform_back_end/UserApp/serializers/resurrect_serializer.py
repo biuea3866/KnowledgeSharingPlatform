@@ -12,8 +12,7 @@ class ResurrectSerializer(serializers.Serializer) :
                   'user_id');
 
     def update(self, instance, validated_data) :
-        if(validated_data['is_active'] is True) :
-            instance.is_active = validated_data.get('is_active', instance.is_active);
+        instance.is_active = validated_data.get('is_active', True);
         
         instance.save();
 
