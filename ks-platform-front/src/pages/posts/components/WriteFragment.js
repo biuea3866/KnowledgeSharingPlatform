@@ -77,8 +77,6 @@ const WriteFragment = () => {
         }));
     };
     const onWrite = e => {
-        e.preventDefault();
-
         dispatch(changeField({
             form: 'write',
             key: 'contents',
@@ -91,6 +89,35 @@ const WriteFragment = () => {
             value: user.user_id
         }));
 
+        const {
+            title,
+            contents,
+        } = form;
+
+        if([title].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "제목이 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+
+        if([contents].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "내용이 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+            
+            return;
+        }
+
         setFlag(true);
     };
 
@@ -102,30 +129,6 @@ const WriteFragment = () => {
                 is_secret,
                 user_id
             } = form;
-
-            if([title].includes('')) {
-                Swal.fire({
-                    title: "Message",
-                    text: "제목이 공란입니다!",
-                    icon: 'error',
-                    confirmButtonColor: palette.red[2],
-                    confirmButtonText: 'OK'
-                });
-
-                return;
-            }
-
-            if([contents].includes('')) {
-                Swal.fire({
-                    title: "Message",
-                    text: "내용이 공란입니다!",
-                    icon: 'error',
-                    confirmButtonColor: palette.red[2],
-                    confirmButtonText: 'OK'
-                });
-
-                return;
-            }
 
             dispatch(writePost({
                 title,
@@ -186,22 +189,26 @@ const WriteFragment = () => {
 
     return(
         <Block>
-            <FormBlock onSubmit={ onWrite }>
+            <FormBlock>
                 <BottomlineInput autoComplete="title"
                                  name="title"
-                                 placeholder="제목을 채워주세요!"
+                                 placeholder="제목을 입력해주세요!"
                                  onChange={ onChangeTitle }
+                                 value={ form.title }
                 />
                 <Summernote id="summernote" 
                             name="contents"
-                            className="contents"     
+                            className="contents" 
+                            value={ form.contents }    
                 />
                 <input id="summernote-value" 
                        type="hidden"
                        value=""
                 />
                 <ButtonGroup>
-                    <AddButton red>
+                    <AddButton red
+                               onClick={ onWrite }
+                    >
                         작성하기
                     </AddButton>
                     <CancelButton>

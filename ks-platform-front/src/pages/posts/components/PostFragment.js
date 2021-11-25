@@ -16,6 +16,7 @@ const Block = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
 `;
 
 const Nav = styled.div`
@@ -66,6 +67,8 @@ const Contents = styled.div`
     border: none;
     border-bottom: 1px solid ${ palette.gray[2] };
     padding-bottom: 10px;
+    overflow: hidden;
+    z-index: 100;
 `;
 
 const PostFragment = () => {

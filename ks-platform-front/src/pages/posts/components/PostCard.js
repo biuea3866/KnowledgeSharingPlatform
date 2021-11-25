@@ -4,13 +4,14 @@ import styled from 'styled-components';
 
 const Block = styled.div`
     backgroud-color: white;
-    width: 350px;
+    width: 450px;
     height: 400px;
     margin: 20px;
     box-shadow: 0px 0px 2px 1px rgba(0, 0, 0, 0.3);
     border-radius: 10px;
     padding: 20px;
     cursor: pointer;
+    overflow: hidden;
 `;
 
 const Title = styled.div`
@@ -21,7 +22,7 @@ const Title = styled.div`
     font-weight: bold;
     font-size: 1.5rem;
     text-align: left;
-    padding-left: 10px;
+    padding: 10px;
 `;
 
 const Article = styled.div`
@@ -38,7 +39,7 @@ const Contents = styled.div`
     width: 400px;
     overflow: hidden;
     text-align: left;
-    padding-left: 10px;
+    padding: 10px;
 `;
 
 const PostCard = post => {
