@@ -4,9 +4,9 @@ import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import person_remove_outline from '../../../static/img/ionicons.designerpack/person-remove-outline.svg';
+import person_add_outline from '../../../static/img/ionicons.designerpack/person-add-outline.svg';
 import { changeField, deleteUser, initializeForm, resurrectUser } from '../../../modules/auth';
 import { getUsers } from '../../../modules/user';
-
 
 const Block = styled.div`
     backgroud-color: white;
@@ -167,7 +167,7 @@ const UserCard = user => {
                     />
                 </DeleteBar> :
                 <HideBar>
-                    <Icon src={ person_remove_outline } 
+                    <Icon src={ person_add_outline } 
                           onClick={ onResurrection }
                     />
                 </HideBar>

@@ -75,7 +75,7 @@ export const modifyUser = ({
 export const resurrectUser = ({
     user_id,
     is_active
-}) => client.put('http://18.177.184.216/auth/modify', {
+}) => client.put('http://18.177.184.216/auth/resurrect', {
     user_id,
     is_active
 }, {

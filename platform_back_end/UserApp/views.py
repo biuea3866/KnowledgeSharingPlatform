@@ -13,6 +13,7 @@ from .serializers.users_serializer import UsersSerializer;
 from .serializers.user_serializer import UserSerializer;
 from .serializers.modify_serializer import ModifySerializer;
 from .serializers.delete_serializer import DeleteSerializer;
+from .serializers.resurrect_serializer import ResurrectSerializer;
 
 class RegisterView(APIView) :
     def post(self, request) :
@@ -98,6 +99,9 @@ class LoginView(APIView) :
 
                 if user is None :
                     raise AuthenticationFailed('User not found!');
+
+                if user.is_active is False :
+                    raise AuthenticationFailed('Deactivating user');
 
                 if bcrypt.checkpw(password.encode('utf-8'), user.password.encode('utf-8')) is False :
                     raise AuthenticationFailed('Incorrect password');
@@ -240,6 +244,42 @@ class DeleteView(APIView) :
             user_serializer = DeleteSerializer(user, 
                                                data=vo,
                                                partial=True);
+
+            if(user_serializer.is_valid(raise_exception=True)) :
+                user_serializer.save();
+
+                return JsonResponse({
+                    'payload': user_serializer.data,
+                    'message': "Successfully delete user"
+                });
+
+            return JsonResponse({
+                'payload': None,
+                'message': "Error: Falied to delete user"
+            });
+        except Exception as e:
+            return JsonResponse({
+                'payload': None,
+                'message': "Error message: " + str(e)
+            });
+
+class ResurrectView(APIView) :
+    def put(self, request) :
+        token = request.META['HTTP_AUTHORIZATION'];
+
+        if not token :
+            raise AuthenticationFailed('Unauthenticated');
+
+        try :
+            vo = JSONParser().parse(request);
+            user = User.objects.get(user_id=vo['user_id']);
+
+            if not user :
+                raise AuthenticationFailed('User not found');
+
+            user_serializer = ResurrectSerializer(user, 
+                                                  data=vo,
+                                                  partial=True);
 
             if(user_serializer.is_valid(raise_exception=True)) :
                 user_serializer.save();

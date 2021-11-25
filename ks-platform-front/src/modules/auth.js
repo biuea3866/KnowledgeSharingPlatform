@@ -145,13 +145,13 @@ const initialState = {
     },
     delete: {
         is_active: false,
-        user_id: ''
+        user_id: '',
     },
     modify: {
         password: '',
         passwordConfirm: '',
         nickname: '',
-        user_id: ''
+        user_id: '',
     },
     resurrect: {
         is_active: true,
