@@ -22,14 +22,16 @@ const LoginForm = () => {
     const { 
         form,
         user,
-        auth
+        auth,
+        authError
     } = useSelector(({ 
         auth,
         user
     }) => ({ 
         form: auth.login,
         user: user.user,
-        auth: auth.auth
+        auth: auth.auth,
+        authError: auth.authError
     }));
     const onChange = e => {
         const {
@@ -110,6 +112,20 @@ const LoginForm = () => {
             navigate('/na-docs');
         }
     }, [dispatch, user]);
+
+    useEffect(() => {
+        if([authError].includes("Error: Deactivating user")) {
+            Swal.fire({
+                title: "Message",
+                text: "비활성화 유저입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+    }, [authError]);
 
     return(
         <FormBlock>

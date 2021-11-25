@@ -66,7 +66,7 @@ const UserCard = user => {
         form,
         auth
     } = useSelector(({ auth }) => ({ 
-        form: auth.delete,
+        form: auth,
         auth: auth.auth
     }));
     const dispatch = useDispatch();
@@ -90,7 +90,7 @@ const UserCard = user => {
                 const {
                     is_active,
                     user_id
-                } = form;
+                } = form.delete;
 
                 dispatch(deleteUser({
                     is_active,
@@ -119,12 +119,12 @@ const UserCard = user => {
                 const {
                     is_active,
                     user_id
-                } = form;
+                } = form.resurrect;
 
-                // dispatch(resurrectUser({
-                //     is_active,
-                //     user_id
-                // }));
+                dispatch(resurrectUser({
+                    is_active,
+                    user_id
+                }));
             }
         });
     };

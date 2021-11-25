@@ -97,6 +97,7 @@ const SearchFragment = () => {
             <SearchForm>
                 <BottomlineInput name="keyword"
                                  onChange={ onChangeKeyword } 
+                                 value={ keyword }
                 />
                 <SearchIcon src={ search_outline }
                             onClick={ onSearch }
