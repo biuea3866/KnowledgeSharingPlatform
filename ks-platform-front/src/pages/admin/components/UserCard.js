@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import person_remove_outline from '../../../static/img/ionicons.designerpack/person-remove-outline.svg';
-import { changeField, deleteUser, initializeForm } from '../../../modules/auth';
+import { changeField, deleteUser, initializeForm, resurrectUser } from '../../../modules/auth';
 import { getUsers } from '../../../modules/user';
 
 
@@ -52,6 +52,7 @@ const HideBar = styled.div`
     display: flex;
     justify-content: center;
     align-items: center;
+    cursor: pointer;
 `;
 
 const Icon = styled.img`
@@ -72,7 +73,7 @@ const UserCard = user => {
     const onDelete = e => {
         Swal.fire({
             title: "Message",
-            text: "Do you sure delete this user?",
+            text: "정말 삭제하시겠습니까?",
             icon: 'warning',
             showCancelButton: true,
             confirmButtonColor: palette.red[2],
@@ -92,6 +93,35 @@ const UserCard = user => {
                 } = form;
 
                 dispatch(deleteUser({
+                    is_active,
+                    user_id
+                }));
+            }
+        });
+    };
+    const onResurrection = e => {
+        Swal.fire({
+            title: "Message",
+            text: "재활성화 시키시겠습니까?",
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: palette.red[2],
+            confirmButtonText: 'Approval',
+            cancelButtonText: 'Cancel'
+        }).then(result => {
+            if(result.isConfirmed) {
+                dispatch(changeField({
+                    form: 'resurrect',
+                    key: 'user_id',
+                    value: user.user.user_id
+                }));
+
+                const {
+                    is_active,
+                    user_id
+                } = form;
+
+                dispatch(resurrectUser({
                     is_active,
                     user_id
                 }));
@@ -137,7 +167,9 @@ const UserCard = user => {
                     />
                 </DeleteBar> :
                 <HideBar>
-                    <Icon src={ person_remove_outline } />
+                    <Icon src={ person_remove_outline } 
+                          onClick={ onResurrection }
+                    />
                 </HideBar>
             }
 

@@ -23,6 +23,9 @@ class ModifySerializer(serializers.ModelSerializer) :
         if(validated_data['nickname'] is not None) :
             instance.nickname = validated_data.get('nickname', instance.nickname);
             
+        if(validated_data['is_active'] is not False) :
+            instance.is_active = validated_data.get('is_active', instance.is_active);
+            
         instance.save();
 
         return instance;

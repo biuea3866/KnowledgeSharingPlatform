@@ -107,6 +107,8 @@ const PostsFragment = () => {
 
             dispatch(initialize('postsError'));
 
+            dispatch(initialize('keyword'));
+
             navigate(-1);
         }
     }, [dispatch, postsError]);
@@ -120,6 +122,7 @@ const PostsFragment = () => {
                     <SearchForm>
                         <BottomlineInput name="keyword"
                                          onChange={ onChangeKeyword }
+                                         value={ keyword }
                         />
                         <SearchIcon src={ search_outline } 
                                     onClick={ onSearch }

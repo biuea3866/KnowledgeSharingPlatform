@@ -7,17 +7,6 @@ import Loading from '../components/common/Loading';
 
 const AdminPage = () => {
     const { user } = useSelector(({ user }) => ({ user: user.user }));
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (user) {
-            if(!user.role.includes('ADMIN')) {
-                alert('Not had admin role!');
-
-                navigate('/na-docs');
-            }
-        }
-    }, [user]);
 
     return(
         <>

@@ -32,6 +32,10 @@ const [MODIFY_USER,
        MODIFY_USER_SUCCESS,
        MODIFY_USER_FAILURE] = createRequestActionTypes('auth/MODIFY_USER');
 
+const [RESURRECT_USER,
+       RESURRECT_USER_SUCCESS,
+       RESURRECT_USER_FAILURE] = createRequestActionTypes('auth/RESURRECT_USER');
+
 export const changeField = createAction(CHANGE_FIELD, ({
     form,
     key,
@@ -92,6 +96,14 @@ export const modifyUser = createAction(MODIFY_USER, ({
     nickname
 }));
 
+export const resurrectUser = createAction(RESURRECT_USER, ({
+    is_active,
+    user_id
+}) => ({
+    is_active,
+    user_id
+}));
+
 const loginSaga = createRequestSaga(LOGIN, authAPI.login);
 
 const registerSaga = createRequestSaga(REGISTER, authAPI.register);
@@ -104,6 +116,8 @@ const deleteUserSaga = createRequestSaga(DELETE_USER, authAPI.deleteUser);
 
 const modifyUserSaga = createRequestSaga(MODIFY_USER, authAPI.modifyUser);
 
+const resurrectUserSaga = createRequestSaga(RESURRECT_USER, authAPI.resurrectUser);
+
 export function* authSaga() {
     yield takeLatest(LOGIN, loginSaga);
     yield takeLatest(REGISTER, registerSaga);
@@ -111,6 +125,7 @@ export function* authSaga() {
     yield takeLatest(CHECK_NICKNAME, checkNicknameSaga);
     yield takeLatest(DELETE_USER, deleteUserSaga);
     yield takeLatest(MODIFY_USER, modifyUserSaga);
+    yield takeLatest(RESURRECT_USER, resurrectUserSaga);
 };
 
 const initialState = {
@@ -136,6 +151,10 @@ const initialState = {
         password: '',
         passwordConfirm: '',
         nickname: '',
+        user_id: ''
+    },
+    resurrect: {
+        is_active: true,
         user_id: ''
     },
     checkedEmail: true,
@@ -203,7 +222,15 @@ const auth = handleActions(
         [MODIFY_USER_FAILURE]: (state, { payload: error }) => ({
             ...state,
             authError: error,
-        })
+        }),
+        [RESURRECT_USER_SUCCESS]: (state, { payload: auth }) => ({
+            ...state,
+            auth
+        }),
+        [RESURRECT_USER_FAILURE]: (state, { payload: error }) => ({
+            ...state,
+            authError: error,
+        }),
     },
     initialState,
 );

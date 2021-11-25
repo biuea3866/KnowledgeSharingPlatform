@@ -11,6 +11,7 @@ import clipboard_outline from '../../../static/img/ionicons.designerpack/clipboa
 import person_outline from '../../../static/img/ionicons.designerpack/person-outline.svg';
 import exit_outline from '../../../static/img/ionicons.designerpack/exit-outline.svg';
 import { initialize, logout } from '../../../modules/user';
+import Swal from 'sweetalert2';
 
 const Box = styled.div`
     width: 100%;
@@ -61,11 +62,22 @@ const HeaderTemplate = () => {
         dispatch(logout());
 
         dispatch(initialize('user'));    
-    };
- 
-    if(!user) {
+        
         navigate('/na-docs/login');
-    }
+    };
+    const onCheckAdmin = e => {
+        if (user) {
+            if(!user.role.includes('ADMIN')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "운영 계정이 아닙니다!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
+            }
+        }
+    };
 
     return(
         <Box>
@@ -78,8 +90,10 @@ const HeaderTemplate = () => {
                 </Title>
             </Header>
             <Nav>
-                <Shortcut path="/na-docs/admin"
+                <Shortcut path={ !user.role.includes('ADMIN') ? 
+                                 "/na-docs" : "/na-docs/admin/" }
                           src={ settings_outline }
+                          onClick={ onCheckAdmin }
                 />
                 <Shortcut path="/na-docs/posts/write"
                           src={ clipboard_outline }

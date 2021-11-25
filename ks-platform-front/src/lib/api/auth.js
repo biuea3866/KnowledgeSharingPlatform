@@ -72,4 +72,16 @@ export const modifyUser = ({
     }
 });
 
+export const resurrectUser = ({
+    user_id,
+    is_active
+}) => client.put('http://18.177.184.216/auth/modify', {
+    user_id,
+    is_active
+}, {
+    headers: {
+        'Authorization': JSON.parse(localStorage.getItem('token'))
+    }
+});
+
 export const logout = () => client.post('http://18.177.184.216/auth/logout');
