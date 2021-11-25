@@ -43,7 +43,13 @@ const SearchIcon = styled.img`
 `;
 
 const SearchFragment = () => {
-    const { keyword } = useSelector(({ posts }) => ({ keyword: posts.keyword }));
+    const { 
+        keyword,
+        postsError
+    } = useSelector(({ posts }) => ({ 
+        keyword: posts.keyword,
+        postsError: posts.postsError
+    }));
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const onChangeKeyword = e => {
@@ -63,7 +69,7 @@ const SearchFragment = () => {
         if([keyword].includes('')) {
             Swal.fire({
                 title: "Message",
-                text: "Please check search input!",
+                text: "검색란이 공란입니다!",
                 icon: 'error',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'
@@ -75,6 +81,8 @@ const SearchFragment = () => {
         navigate('/na-docs/posts', {
             state: keyword
         });
+
+        dispatch(initialize('keyword'));
     };
 
     useEffect(() => {

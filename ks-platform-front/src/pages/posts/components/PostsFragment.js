@@ -5,7 +5,7 @@ import search_outline from '../../../static/img/ionicons.designerpack/search-out
 import BottomlineInput from '../../components/common/BottomlineInput';
 import PostCard from './PostCard';
 import { useLocation, useNavigate } from 'react-router';
-import { changeField, searchPosts } from '../../../modules/posts';
+import { changeField, initialize, searchPosts } from '../../../modules/posts';
 import Loading from '../../components/common/Loading';
 import Swal from 'sweetalert2';
 import palette from '../../../lib/styles/palette';
@@ -50,10 +50,12 @@ const Article = styled.div`
 const PostsFragment = () => {
     const { 
         keyword,
-        posts 
+        posts,
+        postsError 
     } = useSelector(({ posts }) => ({ 
         keyword: posts.keyword,
-        posts: posts.posts 
+        posts: posts.posts,
+        postsError: posts.postsError 
     }));
     const { state } = useLocation();
     const dispatch = useDispatch();
@@ -92,6 +94,22 @@ const PostsFragment = () => {
     useEffect(() => {
         dispatch(searchPosts(state))
     }, [dispatch, state])
+
+    useEffect(() => {
+        if(postsError) {
+            Swal.fire({
+                title: "Message",
+                text: "게시글이 존재하지 않습니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            dispatch(initialize('postsError'));
+
+            navigate(-1);
+        }
+    }, [dispatch, postsError]);
 
     return(
         <Block>

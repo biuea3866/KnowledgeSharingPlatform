@@ -39,7 +39,7 @@ class WriteView(APIView) :
             
             return JsonResponse({
                 'payload': None,
-                'message': 'Failed to write post'
+                'message': 'Error: Failed to write post'
             });
 
         except ValidationError as e:
@@ -64,7 +64,7 @@ class SearchView(APIView) :
             if not posts :
                 return JsonResponse({
                     'payload': None,
-                    'message': 'Posts not found'
+                    'message': 'Error: Posts not found'
                 });
 
             posts_serializer = SearchSerializer(posts,
@@ -94,7 +94,7 @@ class DetailView(APIView) :
             if not post :
                 return JsonResponse({
                     'payload': None,
-                    'message': "Post not found"
+                    'message': "Error: Post not found"
                 });
 
             post_serializer = DetailSerializer(post);
@@ -129,7 +129,7 @@ class CommentView(APIView) :
                 if not post :
                     return JsonResponse({
                         'payload': None,
-                        'message': "Post not found"
+                        'message': "Error: Post not found"
                     });
 
                 updated_post = DetailSerializer(post).data;
@@ -150,12 +150,12 @@ class CommentView(APIView) :
 
                 return JsonResponse({
                     'payload': None,
-                    'message': "Failed to load post"
+                    'message': "Error: Failed to load post"
                 });
 
             return JsonResponse({
                 'payload': None,
-                'message': "Failed to create comment"
+                'message': "Error: Failed to create comment"
             });
 
         except Exception as e :
@@ -183,7 +183,7 @@ class TagView(APIView) :
                 if not post :
                     return JsonResponse({
                         'payload': None,
-                        'message': "Post not found"
+                        'message': "Error: Post not found"
                     });
 
                 updated_post = DetailSerializer(post).data;
@@ -205,12 +205,12 @@ class TagView(APIView) :
 
                 return JsonResponse({
                     'payload': None,
-                    'message': "Failed to load post data"
+                    'message': "Error: Failed to load post data"
                 });
 
             return JsonResponse({
                 'payload': None,
-                'message': "Failed to save tag"
+                'message': "Error: Failed to save tag"
             });
 
         except Exception as e :
@@ -233,7 +233,7 @@ class ModifyView(APIView) :
             if not post :
                 return JsonResponse({
                     'payload': None,
-                    'message': 'Post not found'
+                    'message': 'Error: Post not found'
                 });
 
             updated_post = DetailSerializer(post).data;
@@ -256,7 +256,7 @@ class ModifyView(APIView) :
 
             return JsonResponse({
                 'payload': None,
-                'message': "Failed to modify post"
+                'message': "Error: Failed to modify post"
             });
 
         except Exception as e :
