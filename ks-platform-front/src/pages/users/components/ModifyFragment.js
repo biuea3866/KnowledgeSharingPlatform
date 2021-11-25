@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { changeField, checkNickname, initializeForm, modifyUser } from '../../../modules/auth';
@@ -8,6 +8,7 @@ import BorderButton from '../../components/common/BorderButton';
 import palette from '../../../lib/styles/palette';
 import { useNavigate } from 'react-router';
 import { saveUser } from '../../../modules/user';
+import Swal from 'sweetalert2';
 
 const Block = styled.div`
     padding-top: 200px;
@@ -46,13 +47,6 @@ const Row = styled.div`
     font-size: 1.5rem;
 `;
 
-const ErrorMessage = styled.div`
-    color: ${palette.red[0]};
-    text-align: center;
-    font-size: 14px;
-    margin-top: 1rem;
-`;
-
 const ModifyFragment = () => {
     const { 
         user,
@@ -68,7 +62,6 @@ const ModifyFragment = () => {
         auth: auth.auth,
         checkedNickname: auth.checkedNickname
     }));
-    const [error, setError] = useState('');
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const onChangeField = e => {
@@ -99,24 +92,64 @@ const ModifyFragment = () => {
             passwordConfirm
         } = form;
 
-        if([password,
-            passwordConfirm,
-            nickname].includes('')) {
-            setError('입력하지 않은 사항이 있습니다.')        
-        
+        if([nickname].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "닉네임이 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
             return;
         }
 
+        if([password].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호가 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+
+        if([passwordConfirm].includes('')) {
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호 재입력란이 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
+            return;
+        }
+        
         if(password.length < 8) {
-            setError('비밀번호를 8자리 이상이 아닙니다.');
+            Swal.fire({
+                title: "Message",
+                text: "8자리 이상의 비밀번호가 아닙니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
             return;
         }
 
         if(password !== passwordConfirm) {
-            setError('비밀번호가 일치하지 않습니다.');
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호가 일치하지 않습니다",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
-            return;
+            return
         }
 
         if(checkedNickname) {
@@ -126,6 +159,17 @@ const ModifyFragment = () => {
                 nickname
             }));
         }
+    };
+    const onCancel = e => {
+        dispatch(initializeForm('auth'));
+
+        dispatch(initializeForm('authError'));
+
+        dispatch(initializeForm('modify'));
+
+        dispatch(initializeForm('checkedNickname'));
+
+        navigate('/na-docs/');
     };
 
     useEffect(() => {
@@ -148,8 +192,6 @@ const ModifyFragment = () => {
 
             dispatch(initializeForm('checkedNickname'));
 
-            setError(null);
-
             navigate('/na-docs');
         }
     }, [auth]);
@@ -161,11 +203,11 @@ const ModifyFragment = () => {
                     <b>E-mail: { user.email }</b>
                 </Row>
                 <Row>
-                    <b>Department: { user.department }</b>
+                    <b>부서: { user.department }</b>
                 </Row>
                 <BottomlineInput autoComplete="nickname"
                                  name="nickname"
-                                 placeholder="Nickname"
+                                 placeholder="닉네임"
                                  onChange={ onChangeField }
                 />
                 <BottomlineInput autoComplete="password"
@@ -181,14 +223,13 @@ const ModifyFragment = () => {
                                  onChange={ onChangeField }
                 />
                 <Row>
-                    <b>Created: { user.created_at }</b>
+                    <b>등록일: { user.created_at }</b>
                 </Row>
-                { error && <ErrorMessage>{ error }</ErrorMessage>}
                 <ButtonGroup>
                     <ModifyButton red >
                         저장
                     </ModifyButton>
-                    <CancelButton>
+                    <CancelButton onClick={ onCancel }>
                         취소
                     </CancelButton>
                 </ButtonGroup>

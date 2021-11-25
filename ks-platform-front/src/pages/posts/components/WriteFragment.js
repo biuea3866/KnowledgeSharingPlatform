@@ -47,13 +47,6 @@ const CancelButton = styled(BorderButton)`
     cursor: pointer;
 `;
 
-const ErrorMessage = styled.div`
-    color: ${palette.red[0]};
-    text-align: center;
-    font-size: 14px;
-    margin-top: 1rem;
-`;
-
 const WriteFragment = () => {
     const { 
         form,
@@ -68,9 +61,9 @@ const WriteFragment = () => {
         user: user.user 
     }));
     const [flag, setFlag] = useState(false);
+    const [readPost, setReadPost] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const [error, setError] = useState('');
     const onChangeTitle = e => {
         const {
             name,
@@ -102,46 +95,58 @@ const WriteFragment = () => {
     };
 
     useEffect(() => {
-        const {
-            title,
-            contents,
-            is_secret,
-            user_id
-        } = form;
-
-        if([title].includes('')) {
-            setError('Please check title');
-
-            return;
-        }
-
-        if([contents].includes('')) {
-            setError('Please check contents');
-
-            return;
-        }
-
         if(flag) {
+            const {
+                title,
+                contents,
+                is_secret,
+                user_id
+            } = form;
+
+            if([title].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "제목이 공란입니다!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
+
+                return;
+            }
+
+            if([contents].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "내용이 공란입니다!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
+
+                return;
+            }
+
             dispatch(writePost({
                 title,
                 contents,
                 is_secret,
                 user_id
             }));
+
+            setReadPost(true);
         }
     }, [dispatch, flag]);
 
     useEffect(() => {
-        if(post) {
-            setError(null);
-
+        if(post && readPost) {
             dispatch(initialize('write'));
 
             dispatch(initialize('post'));
-            
+
             Swal.fire({
                 title: "Message",
-                text: "Successfully register user!",
+                text: "게시글이 성공적으로 등록되었습니다!",
                 icon: 'success',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'
@@ -152,8 +157,6 @@ const WriteFragment = () => {
     }, [dispatch, post]);
 
     useEffect(() => {
-        setError(null);
-
         dispatch(initialize('write'));
 
         dispatch(initialize('post'));
@@ -197,7 +200,6 @@ const WriteFragment = () => {
                        type="hidden"
                        value=""
                 />
-                { error && <ErrorMessage>{ error }</ErrorMessage>}
                 <ButtonGroup>
                     <AddButton red>
                         작성하기

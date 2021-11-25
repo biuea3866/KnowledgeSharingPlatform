@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
@@ -7,6 +7,7 @@ import { saveUser } from '../../../modules/user';
 import { useNavigate } from 'react-router-dom'
 import FullButton from '../../components/common/FullButton';
 import Input from '../../components/common/Input';
+import Swal from 'sweetalert2';
 
 const FormBlock = styled.div`
     display: flex;
@@ -15,30 +16,20 @@ const FormBlock = styled.div`
     align-items: center;
 `;
 
-const ErrorMessage = styled.div`
-    color: ${palette.red[0]};
-    text-align: center;
-    font-size: 14px;
-    margin-top: 1rem;
-`;
-
 const LoginForm = () => {
-    const [error, setError] = useState('');
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { 
         form,
         user,
-        auth,
-        authError
+        auth
     } = useSelector(({ 
         auth,
         user
     }) => ({ 
         form: auth.login,
         user: user.user,
-        auth: auth.auth,
-        authError: auth.authError
+        auth: auth.auth
     }));
     const onChange = e => {
         const {
@@ -61,13 +52,25 @@ const LoginForm = () => {
         } = form;
 
         if([email].includes('')) {
-            setError('Email을 입력해주세요');
+            Swal.fire({
+                title: "Message",
+                text: "e-mail이 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
             
             return;
         }
 
         if([password].includes('')) {
-            setError('비밀번호을 입력해주세요');
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호가 공란입니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
             
             return;
         }
@@ -79,12 +82,6 @@ const LoginForm = () => {
     };
 
     useEffect(() => {
-        if(authError) {
-            setError(authError);
-
-            return;
-        };
-
         if(auth) {
             const token = auth;
 
@@ -92,12 +89,18 @@ const LoginForm = () => {
 
             dispatch(saveUser());
         }
-    }, [dispatch, auth, authError]);
+    }, [dispatch, auth]);
+
+    useEffect(() => {
+        dispatch(initializeForm('auth'));
+
+        dispatch(initializeForm('login'));
+        
+        dispatch(initializeForm('authError'));
+    }, []);
 
     useEffect(() => {
         if(user) {
-            setError(null);
-
             localStorage.setItem('user', JSON.stringify(user));
 
             dispatch(initializeForm('auth'));
@@ -124,7 +127,6 @@ const LoginForm = () => {
                        onChange={ onChange }
                        value={ form.password }
                 />
-                { error && <ErrorMessage>{ error }</ErrorMessage>}
                 <FullButton red>
                     Login
                 </FullButton>

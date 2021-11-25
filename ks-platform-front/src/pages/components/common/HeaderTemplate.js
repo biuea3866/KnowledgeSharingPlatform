@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux'; 
+import { useNavigate } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux'; 
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import Logo from './Logo';
@@ -51,6 +52,8 @@ const Nav = styled.div`
 `;
 
 const HeaderTemplate = () => {
+    const { user } = useSelector(({ user }) => ({ user: user.user }));
+    const navigate = useNavigate();
     const dispatch = useDispatch();
     const onLogout = e => {
         e.preventDefault();
@@ -60,6 +63,10 @@ const HeaderTemplate = () => {
         dispatch(initialize('user'));    
     };
  
+    if(!user) {
+        navigate('/na-docs/login');
+    }
+
     return(
         <Box>
             <Header>

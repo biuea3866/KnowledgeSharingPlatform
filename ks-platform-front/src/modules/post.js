@@ -28,6 +28,8 @@ const [EDIT_POST,
        EDIT_POST_SUCCESS,
        EDIT_POST_FAILURE] = createRequestActionTypes('post/EDIT_POST');
 
+const UNLOAD_POST = 'post/UNLOAD_POST';
+
 export const initialize = createAction(INITIALIZE_FORM, form => form);
 
 export const changeField = createAction(CHANGE_FIELD, ({
@@ -85,6 +87,8 @@ export const editPost = createAction(EDIT_POST, ({
     is_secret,
     post_id
 }));
+
+export const unloadPost = createAction(UNLOAD_POST);
 
 const writePostSaga = createRequestSaga(WRITE_POST, postAPI.write);
 
@@ -180,6 +184,7 @@ const post = handleActions(
             ...state,
             postError: error
         }),
+        [UNLOAD_POST]: () => initialState,
     },
     initialState,
 );

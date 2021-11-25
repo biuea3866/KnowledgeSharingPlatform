@@ -250,6 +250,14 @@ const EditFragment = () => {
                 return;
             }
 
+            Swal.fire({
+                title: "Message",
+                text: "Successfully Edit!",
+                icon: 'success',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
+
             dispatch(editPost({
                 title,
                 contents,
