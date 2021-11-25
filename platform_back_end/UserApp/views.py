@@ -286,12 +286,12 @@ class ResurrectView(APIView) :
 
                 return JsonResponse({
                     'payload': user_serializer.data,
-                    'message': "Successfully delete user"
+                    'message': "Successfully resurrect user"
                 });
 
             return JsonResponse({
                 'payload': None,
-                'message': "Error: Falied to delete user"
+                'message': "Error: Falied to resurrect user"
             });
         except Exception as e:
             return JsonResponse({
