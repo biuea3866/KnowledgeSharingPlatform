@@ -77,7 +77,7 @@ const PostsFragment = () => {
         if([keyword].includes('')) {
             Swal.fire({
                 title: "Message",
-                text: "Please check search input!",
+                text: "검색란이 공란입니다!",
                 icon: 'error',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'

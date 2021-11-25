@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import RadioForm from '../../components/common/RadioForm';
 import RadioItem from '../../components/common/RadioItem';
@@ -47,13 +47,6 @@ const AddForm = styled.form`
     flex-direction: column;
 `;
 
-const ErrorMessage = styled.div`
-    color: ${palette.red[0]};
-    text-align: center;
-    font-size: 14px;
-    margin-top: 1rem;
-`;
-
 const RegisterForm = () => {
     const { 
         auth,
@@ -67,7 +60,6 @@ const RegisterForm = () => {
         checkedNickname: auth.checkedNickname
     }));
     const navigate = useNavigate();
-    const [error, setError] = useState('');
     const dispatch = useDispatch();
     const onChangeField = e => {
         const { 
@@ -112,32 +104,54 @@ const RegisterForm = () => {
             department,
             role,
             is_active].includes('')) {
-            setError('입력하지 않은 사항이 있습니다.')        
+            Swal.fire({
+                title: "Message",
+                text: "공란이 있습니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });      
         
             return;
         }
 
         if(!email.match(/^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i)) {
-            setError('이메일 정규식 표현이 아닙니다.');
+            Swal.fire({
+                title: "Message",
+                text: "이메일 정규식이 아닙니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
             return
         }
 
         if(password.length < 8) {
-            setError('비밀번호를 8자리 이상이 아닙니다.');
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호가 8자리 이상이 아닙니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
             return;
         }
 
         if(password !== passwordConfirm) {
-            setError('비밀번호가 일치하지 않습니다.');
+            Swal.fire({
+                title: "Message",
+                text: "비밀번호가 일치하지 않습니다!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
 
             return;
         }
 
         if(checkedEmail && checkedNickname) {
-            setError(null);
-            
             dispatch(register({
                 email,
                 password,
@@ -156,12 +170,16 @@ const RegisterForm = () => {
         dispatch(checkEmail(email));
 
         if(!checkedEmail) {
-            setError('이메일 중복!');
+            Swal.fire({
+                title: "Message",
+                text: "이메일 중복!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
             
             return;
         }
-
-        setError(null);
     }, [checkedEmail, form]);
 
     useEffect(() => {
@@ -170,12 +188,16 @@ const RegisterForm = () => {
         dispatch(checkNickname(nickname));
 
         if(!checkedNickname) {
-            setError('닉네임 중복!');
+            Swal.fire({
+                title: "Message",
+                text: "닉네임 중복!",
+                icon: 'error',
+                confirmButtonColor: palette.red[2],
+                confirmButtonText: 'OK'
+            });
             
             return;
         }
-
-        setError(null);
     }, [checkedNickname, form]);
 
     useEffect(() => {
@@ -190,11 +212,9 @@ const RegisterForm = () => {
 
             dispatch(initializeForm('checkedNickname'));
 
-            setError(null);
-
             Swal.fire({
                 title: "Message",
-                text: "Successfully register user!",
+                text: "유저가 등록되었습니다!",
                 icon: 'success',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'
@@ -255,7 +275,6 @@ const RegisterForm = () => {
                                  placeholder="닉네임"
                                  onChange={ onChangeField }
                 />
-                { error && <ErrorMessage>{ error }</ErrorMessage>}
                 <ButtonGroup>
                     <AddButton red>추가</AddButton>
                     <CancelButton onClick={ onCancel }>취소</CancelButton>

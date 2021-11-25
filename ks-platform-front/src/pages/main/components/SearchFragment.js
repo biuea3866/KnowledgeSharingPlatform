@@ -43,10 +43,7 @@ const SearchIcon = styled.img`
 `;
 
 const SearchFragment = () => {
-    const { 
-        keyword,
-        postsError
-    } = useSelector(({ posts }) => ({ 
+    const { keyword } = useSelector(({ posts }) => ({ 
         keyword: posts.keyword,
         postsError: posts.postsError
     }));

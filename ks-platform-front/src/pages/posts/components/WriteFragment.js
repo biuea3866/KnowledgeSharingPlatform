@@ -169,7 +169,7 @@ const WriteFragment = () => {
             $(document).ready(function() {
                 $('#summernote').summernote({
                                     lang: "ko-KR",
-                                    placeholder: 'Fill in your idea!',
+                                    placeholder: '내용을 채워주세요!',
                                     height: 500,
                                     minHeight: 500,
                                     maxHeight: 500
@@ -189,7 +189,7 @@ const WriteFragment = () => {
             <FormBlock onSubmit={ onWrite }>
                 <BottomlineInput autoComplete="title"
                                  name="title"
-                                 placeholder="Please fill title"
+                                 placeholder="제목을 채워주세요!"
                                  onChange={ onChangeTitle }
                 />
                 <Summernote id="summernote" 

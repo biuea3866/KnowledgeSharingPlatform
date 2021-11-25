@@ -164,7 +164,7 @@ const CommentBox = () => {
         if([content].includes('')) {
             Swal.fire({
                 title: "Message",
-                text: "Please Fill in comment!",
+                text: "댓글이 공란입니다!",
                 icon: 'error',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'
@@ -213,7 +213,7 @@ const CommentBox = () => {
                     <Checkmark className="on"></Checkmark>
                 </SecretBox>
                 <CommentInput name="content" 
-                              placeholder="Write down comment"
+                              placeholder="댓글을 적어주세요"
                               onChange={ onChangeContent }
                 />
                 <CommentButton src={ paper_plane_outline } 

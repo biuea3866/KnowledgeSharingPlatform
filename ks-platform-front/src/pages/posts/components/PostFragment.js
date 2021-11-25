@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useMatch, useNavigate } from 'react-router';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
-import { getPost, initialize, unloadPost } from '../../../modules/post';
+import { getPost, unloadPost } from '../../../modules/post';
 import BorderButton from '../../components/common/BorderButton';
 import Loading from '../../components/common/Loading';
 import CommentBox from './CommentBox';
@@ -90,10 +90,6 @@ const PostFragment = () => {
         const { post_id } = match.params;
         
         dispatch(getPost(post_id));
-
-        return () => {
-            dispatch(unloadPost());
-        }
     }, []);
 
     return(

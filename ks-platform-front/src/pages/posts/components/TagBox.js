@@ -99,7 +99,7 @@ const TagBox = () => {
             {
                 user.user_id === post.user_id &&
                 <TagForm onSubmit={ onTag }>
-                    <TagInput placeholder="Enter tag!"
+                    <TagInput placeholder="태그를 입력해주세요!"
                             name="tag"
                             onChange={ onChangeTag }
                     />

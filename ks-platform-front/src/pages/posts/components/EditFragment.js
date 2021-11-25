@@ -202,7 +202,7 @@ const EditFragment = () => {
             $(document).ready(function() {
                 $('#summernote').summernote({
                                     lang: "ko-KR",
-                                    placeholder: 'Fill in your idea!',
+                                    placeholder: '내용을 채워주세요!',
                                     height: 500,
                                     minHeight: 500,
                                     maxHeight: 500
@@ -229,7 +229,7 @@ const EditFragment = () => {
             if([title].includes('')) {
                 Swal.fire({
                     title: "Message",
-                    text: "Please Fill in title!",
+                    text: "제목이 공란입니다!",
                     icon: 'error',
                     confirmButtonColor: palette.red[2],
                     confirmButtonText: 'OK'
@@ -241,7 +241,7 @@ const EditFragment = () => {
             if([contents].includes('')) {
                 Swal.fire({
                     title: "Message",
-                    text: "Please Fill in contents!",
+                    text: "내용이 공란입니다!",
                     icon: 'error',
                     confirmButtonColor: palette.red[2],
                     confirmButtonText: 'OK'
@@ -252,7 +252,7 @@ const EditFragment = () => {
 
             Swal.fire({
                 title: "Message",
-                text: "Successfully Edit!",
+                text: "편집이 완료되었습니다!",
                 icon: 'success',
                 confirmButtonColor: palette.red[2],
                 confirmButtonText: 'OK'

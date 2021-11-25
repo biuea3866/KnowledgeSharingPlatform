@@ -142,22 +142,22 @@ const UserCard = user => {
     return (
         <Block>
             <Row>
-                <b>Email: { user.user.email }</b>
+                <b>E-mail: { user.user.email }</b>
             </Row>
             <Row>
-                <b>Nickname: { user.user.nickname }</b>
+                <b>닉네임: { user.user.nickname }</b>
             </Row>
             <Row>
-                <b>Name: { user.user.name }</b>
+                <b>이름: { user.user.name }</b>
             </Row>
             <Row>
-                <b>Department: { user.user.department }</b>
+                <b>부서: { user.user.department }</b>
             </Row>
             <Row>
-                <b>Role: { user.user.role }</b>
+                <b>직책: { user.user.role }</b>
             </Row>
             <Row>
-                <b>Created: { user.user.created_at }</b>
+                <b>등록일: { user.user.created_at }</b>
             </Row>
             {
                 user.user.is_active === true ?
