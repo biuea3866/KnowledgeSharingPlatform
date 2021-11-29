@@ -163,7 +163,7 @@ const RegisterForm = () => {
             }));
         }
     }
-
+    
     useEffect(() => {
         const { email } = form;
 

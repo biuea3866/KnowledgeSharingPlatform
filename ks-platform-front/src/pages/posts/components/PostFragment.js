@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import { getPost, unloadPost } from '../../../modules/post';
 import BorderButton from '../../components/common/BorderButton';
+import FullButton from '../../components/common/FullButton';
 import Loading from '../../components/common/Loading';
 import CommentBox from './CommentBox';
 import TagBox from './TagBox';
@@ -38,6 +39,12 @@ const EditButton = styled(BorderButton)`
     cursor: pointer;
 `;
 
+const BackButton = styled(FullButton)`
+    width: 130px;
+    margin-left: 20px;
+    cursor: pointer;
+`;
+
 const Article = styled.div`
     width: 90%;
     display: flex;
@@ -62,13 +69,13 @@ const Title = styled.div`
 const Contents = styled.div`
     width: 90%;
     display: flex;
-    justify-content: flex-start;
+    justify-content: center;
     margin-top: 100px;
     border: none;
     border-bottom: 1px solid ${ palette.gray[2] };
     padding-bottom: 10px;
     overflow: hidden;
-    z-index: 100;
+    z-index: -1;
 `;
 
 const PostFragment = () => {
@@ -88,11 +95,16 @@ const PostFragment = () => {
     const toEdit = e => {
         navigate(`/na-docs/post/edit/${post.post_id}`);
     };
+    const onBack = e => {
+        navigate(-1);
+    };
 
     useEffect(() => {
         const { post_id } = match.params;
         
         dispatch(getPost(post_id));
+
+        return () => dispatch(unloadPost());
     }, []);
 
     return(
@@ -102,6 +114,11 @@ const PostFragment = () => {
                 <>
                     <Nav>
                         <ButtonGroup>
+                            <BackButton red
+                                        onClick={ onBack }
+                            >
+                                목록
+                            </BackButton>
                             {
                                 post.user_id === user.user_id &&
                                 <EditButton onClick={ toEdit }>

@@ -120,6 +120,11 @@ const WriteFragment = () => {
 
         setFlag(true);
     };
+    const onEnter = e => {
+        if(e.key === 'Enter') {
+            onWrite();
+        }
+    };
 
     useEffect(() => {
         if(flag) {
@@ -208,6 +213,7 @@ const WriteFragment = () => {
                 <ButtonGroup>
                     <AddButton red
                                onClick={ onWrite }
+                               onKeyPress={ onEnter }
                     >
                         작성하기
                     </AddButton>

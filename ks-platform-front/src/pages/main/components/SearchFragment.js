@@ -81,6 +81,11 @@ const SearchFragment = () => {
 
         dispatch(initialize('keyword'));
     };
+    const onEnter = e => {
+        if(e.key === 'Enter') {
+            onSearch();
+        }
+    };
 
     useEffect(() => {
         dispatch(initialize('posts'));
@@ -93,7 +98,8 @@ const SearchFragment = () => {
             </Title>
             <SearchForm>
                 <BottomlineInput name="keyword"
-                                 onChange={ onChangeKeyword } 
+                                 onChange={ onChangeKeyword }
+                                 onKeyPress={ onEnter } 
                                  value={ keyword }
                 />
                 <SearchIcon src={ search_outline }

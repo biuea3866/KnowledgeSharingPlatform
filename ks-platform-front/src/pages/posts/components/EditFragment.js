@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useNavigate } from 'react-router';
-import { changeField, editPost, initialize } from '../../../modules/post';
+import { useMatch, useNavigate } from 'react-router';
+import { changeField, editPost, getPost, initialize } from '../../../modules/post';
 import styled from 'styled-components';
 import palette from '../../../lib/styles/palette';
 import BorderButton from '../../components/common/BorderButton';
@@ -9,6 +9,7 @@ import BottomlineInput from '../../components/common/BottomlineInput';
 import FullButton from '../../components/common/FullButton';
 import $ from 'jquery';
 import Swal from 'sweetalert2';
+import Loading from '../../components/common/Loading';
 
 const Block = styled.div`
     padding-top: 150px;
@@ -135,6 +136,7 @@ const EditFragment = () => {
     const [flag, setFlag] = useState(false);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const match = useMatch('/na-docs/post/edit/:post_id');
     const onChangeTitle = e => {
         const {
             name,
@@ -194,27 +196,16 @@ const EditFragment = () => {
 
         setFlag(true);
     };
+    const onEnter = e => {
+        if(e.key === 'Enter') {
+            onEdit();
+        }
+    };
 
     useEffect(() => {
-        const script = document.createElement('script');
-        
-        script.text = `
-            $(document).ready(function() {
-                $('#summernote').summernote({
-                                    lang: "ko-KR",
-                                    placeholder: '내용을 채워주세요!',
-                                    height: 500,
-                                    minHeight: 500,
-                                    maxHeight: 500
-                                });
-            
-                $('#summernote').on('summernote.change', function(e) {
-                    $('#summernote-value').val($('#summernote').summernote('code'));
-                });
-            });
-        `;
+        const { post_id } = match.params;
 
-        document.body.append(script);
+        dispatch(getPost(post_id));
     }, []);
     
     useEffect(() => {
@@ -269,50 +260,79 @@ const EditFragment = () => {
         }
     }, [dispatch, form, flag]);
 
+    useEffect(() => {
+        const script = document.createElement('script');
+        
+        script.text = `
+            $(document).ready(function() {
+                $('#summernote').summernote({
+                                    lang: "ko-KR",
+                                    placeholder: '내용을 채워주세요!',
+                                    height: 500,
+                                    minHeight: 500,
+                                    maxHeight: 500
+                                });
+            
+                $('#summernote').on('summernote.change', function(e) {
+                    $('#summernote-value').val($('#summernote').summernote('code'));
+                });
+            });
+        `;
+
+        document.body.append(script);
+    });
+
     return(
         <Block>
-            <Nav>
-                <ButtonGroup>
-                    <EditButton onClick={ onEdit }>
-                        편집
-                    </EditButton>
-                    <CancelButton red
-                                  onClick={ onCancel }
-                    >
-                        취소
-                    </CancelButton>
-                </ButtonGroup>
-            </Nav>
-            <SecretRow>
-                <SecretBox for="check"
-                           className="check-box"
-                >
-                    <Checkbox type="checkbox"
-                              id="check"
-                              name="is_secret"
-                              onClick={ onCheckSecret }
-                    />
-                    <Checkmark className="on"></Checkmark>
-                </SecretBox>
-                비공개
-            </SecretRow>
-            <Article>
-                작성일 { post.created_at.substring(0, 10) } | 수정일 { post.updated_at.substring(0, 10)  } | 총 { post.update_count } 회 수정
-            </Article>
-            <FormBlock>
-                <EditInput name="title"
-                           value={ post.title }
-                           onChange={ onChangeTitle }
-                />
-                <Summernote id="summernote"
-                            name="contents"
-                            value={ post.contents }
-                />  
-                <input id="summernote-value" 
-                       type="hidden"
-                       value={ post.contents }
-                />
-            </FormBlock>
+            {
+                post ?
+                <>
+                    <Nav>
+                        <ButtonGroup>
+                            <EditButton onClick={ onEdit }
+                                        onKeyPress={ onEnter }
+                            >
+                                편집
+                            </EditButton>
+                            <CancelButton red
+                                          onClick={ onCancel }
+                            >
+                                취소
+                            </CancelButton>
+                        </ButtonGroup>
+                    </Nav>
+                    <SecretRow>
+                        <SecretBox for="check"
+                                   className="check-box"
+                        >
+                            <Checkbox type="checkbox"
+                                      id="check"
+                                      name="is_secret"
+                                      onClick={ onCheckSecret }
+                            />
+                            <Checkmark className="on"></Checkmark>
+                        </SecretBox>
+                        비공개
+                    </SecretRow>
+                    <Article>
+                        작성일 { post.created_at.substring(0, 10) } | 수정일 { post.updated_at.substring(0, 10)  } | 총 { post.update_count } 회 수정
+                    </Article>
+                    <FormBlock>
+                        <EditInput name="title"
+                                   value={ post.title }
+                                   onChange={ onChangeTitle }
+                        />
+                        <Summernote id="summernote"
+                                    name="contents"
+                                    value={ post.contents }
+                        />  
+                        <input id="summernote-value" 
+                               type="hidden"
+                               value={ post.contents }
+                        />
+                    </FormBlock>
+                </> : <Loading />
+            }
         </Block>
     );
 };

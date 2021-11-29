@@ -182,6 +182,11 @@ const CommentBox = () => {
 
         dispatch(initialize('comment'));
     };
+    const onEnter = e => {
+        if(e.key === 'Enter') {
+            onComment();
+        }
+    };
 
     useEffect(() => {
         dispatch(changeField({
@@ -215,6 +220,7 @@ const CommentBox = () => {
                 <CommentInput name="content" 
                               placeholder="댓글을 적어주세요"
                               onChange={ onChangeContent }
+                              onKeyPress={ onEnter }
                 />
                 <CommentButton src={ paper_plane_outline } 
                                onClick={ onComment }

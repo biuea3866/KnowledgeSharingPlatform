@@ -1,6 +1,7 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import styled from 'styled-components';
+import Swal from 'sweetalert2';
 import palette from '../../../lib/styles/palette';
 import { addTag, changeField } from '../../../modules/post';
 import BottomlineInput from '../../components/common/BottomlineInput';
@@ -85,6 +86,19 @@ const TagBox = () => {
             tag,
             post_id
         }));
+
+        Swal.fire({
+            title: "Message",
+            text: "태그가 추가되었습니다!",
+            icon: 'success',
+            confirmButtonColor: palette.red[2],
+            confirmButtonText: 'OK'
+        });
+    };
+    const onEnter = e => {
+        if(e.key === 'Enter') {
+            onTag();
+        }
     };
 
     return(
@@ -100,8 +114,9 @@ const TagBox = () => {
                 user.user_id === post.user_id &&
                 <TagForm onSubmit={ onTag }>
                     <TagInput placeholder="태그를 입력해주세요!"
-                            name="tag"
-                            onChange={ onChangeTag }
+                              name="tag"
+                              onChange={ onChangeTag }
+                              onKeyPress={ onEnter }
                     />
                     <TagButton red>
                         추가
