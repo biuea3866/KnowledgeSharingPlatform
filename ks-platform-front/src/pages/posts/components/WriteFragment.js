@@ -17,6 +17,7 @@ const Block = styled.div`
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    z-index: 100;
 `;
 
 const FormBlock = styled.form`
@@ -26,7 +27,9 @@ const FormBlock = styled.form`
 `;
 
 const Summernote = styled.textarea`
-    z-index: 100;
+    p div {
+        z-index: 100;
+    }
 `;
 
 const ButtonGroup = styled.div`
@@ -80,7 +83,7 @@ const WriteFragment = () => {
         dispatch(changeField({
             form: 'write',
             key: 'contents',
-            value: $('#summernote-value').val()
+            value: $('#summernote')[0].value
         }));
 
         dispatch(changeField({
@@ -88,35 +91,6 @@ const WriteFragment = () => {
             key: 'user_id',
             value: user.user_id
         }));
-
-        const {
-            title,
-            contents,
-        } = form;
-
-        if([title].includes('')) {
-            Swal.fire({
-                title: "Message",
-                text: "제목이 공란입니다!",
-                icon: 'error',
-                confirmButtonColor: palette.red[2],
-                confirmButtonText: 'OK'
-            });
-
-            return;
-        }
-
-        if([contents].includes('')) {
-            Swal.fire({
-                title: "Message",
-                text: "내용이 공란입니다!",
-                icon: 'error',
-                confirmButtonColor: palette.red[2],
-                confirmButtonText: 'OK'
-            });
-            
-            return;
-        }
 
         setFlag(true);
     };
@@ -134,15 +108,42 @@ const WriteFragment = () => {
                 is_secret,
                 user_id
             } = form;
+    
+            if([title].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "제목이 공란입니다!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
 
-            dispatch(writePost({
-                title,
-                contents,
-                is_secret,
-                user_id
-            }));
+                setFlag(false);
+            }
+    
+            if([contents].includes('')) {
+                Swal.fire({
+                    title: "Message",
+                    text: "내용이 공란입니다!",
+                    icon: 'error',
+                    confirmButtonColor: palette.red[2],
+                    confirmButtonText: 'OK'
+                });
 
-            setReadPost(true);
+                setFlag(false);
+            }
+
+            if(![title, 
+                 contents].includes('')) {
+                dispatch(writePost({
+                    title,
+                    contents,
+                    is_secret,
+                    user_id
+                }));
+
+                setReadPost(true)
+            }
         }
     }, [dispatch, flag]);
 
@@ -162,7 +163,7 @@ const WriteFragment = () => {
 
             navigate('/na-docs/');
         }
-    }, [dispatch, post]);
+    }, [dispatch, post, readPost]);
 
     useEffect(() => {
         dispatch(initialize('write'));
@@ -191,7 +192,7 @@ const WriteFragment = () => {
 
         document.body.append(script);
     }, []);
-
+    
     return(
         <Block>
             <FormBlock>
@@ -201,19 +202,17 @@ const WriteFragment = () => {
                                  onChange={ onChangeTitle }
                                  value={ form.title }
                 />
-                <Summernote id="summernote" 
-                            name="contents"
-                            className="contents" 
-                            value={ form.contents }    
-                />
+                <Summernote id="summernote" />
                 <input id="summernote-value" 
+                       name="contents"
                        type="hidden"
                        value=""
                 />
                 <ButtonGroup>
                     <AddButton red
+                               type="button"
                                onClick={ onWrite }
-                               onKeyPress={ onEnter }
+                               onKeyPress={ onEnter }        
                     >
                         작성하기
                     </AddButton>
