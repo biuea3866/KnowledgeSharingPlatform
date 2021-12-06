@@ -15,6 +15,8 @@ from .serializers.modify_serializer import ModifySerializer;
 from .serializers.delete_serializer import DeleteSerializer;
 from .serializers.resurrect_serializer import ResurrectSerializer;
 
+from django.core.cache import cache;
+
 class RegisterView(APIView) :
     def post(self, request) :
         token = request.META['HTTP_AUTHORIZATION'];
@@ -95,7 +97,7 @@ class LoginView(APIView) :
                 email = user_serializer.data['email'];
                 password = user_serializer.data['password'];
 
-                user = User.objects.filter(email=email).first()
+                user = cache.get_or_set('user', User.objects.filter(email=email).first());
 
                 if user is None :
                     raise AuthenticationFailed('User not found!');
@@ -143,7 +145,7 @@ class UserView(APIView) :
             payload = jwt.decode(token, 
                                  'secret', 
                                  algorithms='HS256');
-            user = User.objects.get(user_id=payload['user_id']);
+            user = cache.get_or_set('user', User.objects.get(user_id=payload['user_id']));
 
             if not user :
                 raise AuthenticationFailed('User not found!');
@@ -168,8 +170,9 @@ class UsersView(APIView) :
         try :
             users = User.objects.all();
 
-            user_serializer = UsersSerializer(users, 
-                                              many=True);
+            user_serializer = cache.cache.get_or_set('users', 
+                                                     UsersSerializer(users, 
+                                                                     many=True));
 
             return JsonResponse({
                 'payload': user_serializer.data,

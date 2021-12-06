@@ -13,7 +13,7 @@ class Post(models.Model) :
 
     created_at = models.DateTimeField(auto_now_add=True);
 
-    updated_at = models.DateTimeField(default=timezone.now());
+    updated_at = models.DateTimeField(default=timezone.now);
 
     update_count = models.IntegerField(default=0);
 

@@ -18,6 +18,8 @@ from .serializers.comments_serializer import CommentsSerializer;
 from .serializers.tag_serializer import TagSerializer;
 from .serializers.tags_serializer import TagsSerializer;
 
+from django.core.cache import cache;
+
 class WriteView(APIView) :
     def post(self, request) :
         token = request.META['HTTP_AUTHORIZATION'];
@@ -56,10 +58,12 @@ class SearchView(APIView) :
             raise AuthenticationFailed('Unauthentication');
 
         try :
-            tags = Tag.objects.filter(Q(tag__icontains=keyword));
-            posts = Post.objects.filter(Q(title__icontains=keyword) |
-                                        Q(contents__icontains=keyword) |
-                                        Q(post_id__in=tags.values_list('post_id'))).distinct();
+            tags = cache.get_or_set('tags',
+                                    Tag.objects.filter(Q(tag__icontains=keyword)));
+            posts = cache.get_or_set('posts',
+                                      Post.objects.filter(Q(title__icontains=keyword) |
+                                                          Q(contents__icontains=keyword) |
+                                                          Q(post_id__in=tags.values_list('post_id'))).distinct());
 
             if not posts :
                 return JsonResponse({
@@ -89,7 +93,7 @@ class DetailView(APIView) :
             raise AuthenticationFailed('Unauthentication');
 
         try :
-            post = Post.objects.get(post_id=post_id);
+            post = cache.get_or_set('post', Post.objects.get(post_id=post_id));
             
             if not post :
                 return JsonResponse({

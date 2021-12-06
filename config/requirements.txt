@@ -6,4 +6,6 @@ uwsgi
 djangorestframework
 django_cors_headers
 gunicorn
+django-redis
 PyJWT
+pymongo==3.12.1

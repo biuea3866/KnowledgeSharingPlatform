@@ -99,6 +99,9 @@ const WriteFragment = () => {
             onWrite();
         }
     };
+    const onCancel = e => {
+        navigate(-1);
+    };
 
     useEffect(() => {
         if(flag) {
@@ -216,7 +219,7 @@ const WriteFragment = () => {
                     >
                         작성하기
                     </AddButton>
-                    <CancelButton>
+                    <CancelButton onClick={ onCancel } >
                         취소하기
                     </CancelButton>
                 </ButtonGroup>

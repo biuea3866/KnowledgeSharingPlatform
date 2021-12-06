@@ -57,6 +57,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+CACHE_TTL = 100000
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://cache:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'TIMEOUT': 5,
+            'PASSWORD': 'samplepassword'
+        }
+    }
+}
 ROOT_URLCONF = 'platform_back_end.urls'
 
 TEMPLATES = [

@@ -40,7 +40,7 @@ export const getUser = () => client.get('http://localhost/auth/get-user', {
     }
 });
 
-export const getUsers = () => client.get('http://18.177.184.216/auth/', {
+export const getUsers = () => client.get('http://localhost/auth/', {
     headers: {
         'Authorization': JSON.parse(localStorage.getItem('token'))
     }
@@ -49,7 +49,7 @@ export const getUsers = () => client.get('http://18.177.184.216/auth/', {
 export const deleteUser = ({
     is_active,
     user_id
-}) => client.put('http://18.177.184.216/auth/delete', {
+}) => client.put('http://localhost/auth/delete', {
     is_active,
     user_id
 }, {
@@ -62,7 +62,7 @@ export const modifyUser = ({
     user_id,
     password,
     nickname
-}) => client.put('http://18.177.184.216/auth/modify', {
+}) => client.put('http://localhost/auth/modify', {
     user_id,
     password,
     nickname
@@ -75,7 +75,7 @@ export const modifyUser = ({
 export const resurrectUser = ({
     user_id,
     is_active
-}) => client.put('http://18.177.184.216/auth/resurrect', {
+}) => client.put('http://localhost/auth/resurrect', {
     user_id,
     is_active
 }, {
@@ -84,4 +84,4 @@ export const resurrectUser = ({
     }
 });
 
-export const logout = () => client.post('http://18.177.184.216/auth/logout');
+export const logout = () => client.post('http://localhost/auth/logout');
